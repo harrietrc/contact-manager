@@ -24,13 +24,22 @@ class ContactListAdapter extends ArrayAdapter<Contact> {
 		_contacts = contacts;
 	}
 	
+	/**
+	 * A structure that exists for convenience and holds the three
+	 * views required for a contact list row.
+	 */
 	private static class ViewStructure {
 		ImageView image;
 		TextView name;
 		TextView number;
 	}
 	
+	/**
+	 * Gets a row layout and views for a contact in the contact list.
+	 */
 	public View getView(int position, View row, ViewGroup parent) {
+		/* I intend to get this working so that contacts without photos will have a different row layout. Since
+		 * this is more of a non-critical UI thing I haven't implemented it yet. */
 		
 		// The contact that we're working with
 		Contact c = (Contact) _contacts.get(position);

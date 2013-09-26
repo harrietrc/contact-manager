@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	
+    <!-- This xml is filled with linear layouts so that I can later easily
+    implement functionality that hides headings + content that are left blank
+    by the user.
+     -->
+    
+    <RelativeLayout
+        android:id="@+id/contactHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" > 
+	    <ImageView
+	        android:id="@+id/image"
+	        android:layout_width="75dp"
+	        android:layout_height="75dp"
+	        android:layout_alignParentRight="true"
+	        />
+	</RelativeLayout>
+	
+    <LinearLayout
+        android:id="@+id/firstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/firstNameHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/first_name" />
+    	<EditText
+	        android:id="@+id/editFirstName"
+	        android:layout_width="match_parent"
+	        android:inputType="textPersonName|textCapWords"
+	        android:layout_height="wrap_content" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/lastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/lastNameHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/last_name" />
+    	<EditText
+	        android:id="@+id/editLastName"
+	        android:layout_width="match_parent"
+	        android:inputType="textPersonName|textCapWords"
+	        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/mobilePhoneHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/mobile_phone" />
+    	<EditText
+	        android:id="@+id/editMobilePhone"
+	        android:layout_width="match_parent"
+	        android:inputType="phone"
+	        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    	<TextView
+	        android:id="@+id/homePhoneHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/home_phone" />
+	    <EditText
+	        android:id="@+id/editHomePhone"
+	        android:layout_width="match_parent"
+	        android:inputType="phone"
+	        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/work"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/workPhoneHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/work_phone" />
+	    <EditText
+	        android:id="@+id/editWorkPhone"
+	        android:layout_width="match_parent"
+	        android:inputType="phone"
+	        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/emailHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/email" />
+	    <EditText
+	        android:id="@+id/editEmail"
+	        android:layout_width="match_parent"
+	        android:inputType="textEmailAddress"
+	        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/addressHeading"
+	        android:layout_width="wrap_content"
+	        android:text="@string/address"
+	        android:layout_height="wrap_content" />
+	    <EditText
+	        android:id="@+id/editAddress"
+	        android:layout_width="match_parent"
+	        android:inputType="textPostalAddress"
+	        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/dateOfBirthHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/date_of_birth" />
+	    <EditText
+	        android:id="@+id/editMobile"
+	        android:layout_width="match_parent"
+	        android:inputType="date"
+	        android:layout_height="wrap_content" />
+    </LinearLayout>
+ 
+</LinearLayout>

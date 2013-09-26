@@ -9,4 +9,29 @@
     <string name="action_sort">Sort</string>
     <string name="all_contacts">All Contacts</string>
 
+    <string-array name="sort_options">
+        <item>First name</item>
+        <item>Last name</item>
+        <item>Number</item>
+    </string-array>
+
+    <string name="mobile_phone">MOBILE PHONE</string>
+    <string name="home_phone">HOME PHONE</string>
+    <string name="address">ADDRESS</string>
+    <string name="email">EMAIL</string>
+    <string name="date_of_birth">DATE OF BIRTH</string>
+    <string name="work_phone">WORK PHONE</string>
+    <string name="title_activity_contact_view">ContactView</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_back">Back</string>
+    <string name="view_title">View Contact</string>
+    <string name="action_edit">Edit</string>
+    <string name="delete_prompt">Delete contact?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="title_activity_add_contact_view">AddContactView</string>
+    <string name="last_name">LAST NAME</string>
+    <string name="first_name">FIRST NAME</string>
+    <string name="title_activity_edit_contact_view">EditContactView</string>
+
 </resources>
