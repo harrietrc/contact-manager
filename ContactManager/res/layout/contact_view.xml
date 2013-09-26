@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:label="John Doe"> <!-- Not always going to be hard coded... -->
+	
+    <!-- This xml is filled with linear layouts so that I can later easily
+    implement functionality that hides headings + content that are left blank
+    by the user.
+     -->
+    
+    <RelativeLayout
+        android:id="@+id/contactHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" > 
+	    <TextView
+	        android:id="@+id/fullName"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginRight= "175dip"/>
+	    <ImageView
+	        android:id="@+id/image"
+	        android:layout_width="75dp"
+	        android:layout_height="75dp"
+	        android:layout_alignParentRight="true"
+	        />
+	</RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/mobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/mobilePhoneHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/mobile_phone" />
+    	<TextView
+	        android:id="@+id/mobilePhone"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    	<TextView
+	        android:id="@+id/homePhoneHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/home_phone" />
+	    <TextView
+	        android:id="@+id/homePhone"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/work"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/workPhoneHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/work_phone" />
+	    <TextView
+	        android:id="@+id/workPhone"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/emailHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/email" />
+	    <TextView
+	        android:id="@+id/emailAddress"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/addressHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/address" />
+	    <TextView
+	        android:id="@+id/homeAddress"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/dateOfBirthHeading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/date_of_birth" />
+	    <TextView
+	        android:id="@+id/dateOfBirth"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+    </LinearLayout>
+ 
+</LinearLayout>

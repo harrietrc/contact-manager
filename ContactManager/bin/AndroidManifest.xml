@@ -22,6 +22,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.contactmanager.ContactView"
+            android:label="@string/title_activity_contact_view" >
+        </activity>
+        <activity
+            android:name="com.example.contactmanager.AddContactView"
+            android:label="@string/title_activity_add_contact_view" >
+        </activity>
+        <activity
+            android:name="com.example.contactmanager.EditContactView"
+            android:label="@string/title_activity_edit_contact_view" >
+        </activity>
     </application>
 
 </manifest>
