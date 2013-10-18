@@ -1,22 +1,92 @@
 package com.example.contactmanager;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 public class Contact {
 	
-	private String _firstName;
-	private String _lastName;
-	private String _home;
-	private String _work;
-	private String _mobile;
-	private String _address;
-	private String _dob;
-	// There will also be an image field, but I'm not really sure how images
-	// are going to be set up for this project.
+	// I looked at an example and the fields values were initialised up here instead
+	// of in the constructor.
+	public String firstName="";
+	public String lastName="";
+	public String homePhone="";
+	public String workPhone="";
+	public String mobilePhone="";
+	public String email = "";
+	public String address="";
+	public String dob="";
+	public long id=-1;
+	public String imagePath;
+	
+	public static final String TABLE_NAME = "Contact";
+	public static final String COL_ID = "id";
+	public static final String COL_FIRSTNAME = "firstName";
+	public static final String COL_LASTNAME = "lastName";
+	public static final String COL_HOMEPHONE = "homePhone";
+	public static final String COL_WORKPHONE = "workPhone";
+	public static final String COL_MOBILEPHONE = "mobilePhone";
+	public static final String COL_EMAIL = "email";
+	public static final String COL_ADDRESS = "address";
+	public static final String COL_DOB = "dob";
+	public static final String COL_IMAGE = "imagePath";
+	
+	public static final String[] FIELDS = {COL_ID, COL_FIRSTNAME, COL_LASTNAME,
+		COL_HOMEPHONE, COL_WORKPHONE, COL_MOBILEPHONE, COL_ADDRESS, COL_DOB};
+	
+	/* Figured I might as well store everything as strings and then convert them
+	   if they need to be used in a different format. Phone numbers may contain 
+	   characters such as - and (). */
+	public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + 
+			"(" + COL_ID + " INTEGER PRIMARY KEY," + COL_FIRSTNAME + 
+			" TEXT NOT NULL DEFAULT ''," + COL_LASTNAME + 
+			" TEXT NOT NULL DEFAULT ''," + COL_HOMEPHONE +
+			" TEXT NOT NULL DEFAULT ''," + COL_WORKPHONE +
+			" TEXT NOT NULL DEFAULT ''," + COL_MOBILEPHONE +
+			" TEXT NOT NULL DEFAULT ''," + COL_EMAIL +
+			" TEXT NOT NULL DEFAULT ''," + COL_ADDRESS +
+			" TEXT NOT NULL DEFAULT ''," + COL_DOB +
+			" TEXT NOT NULL DEFAULT ''," + COL_IMAGE;
 	
 	/**
-	 * Blank for now. Obviously won't be later.
+	 * Blank for now. 
 	 */
-	public Contact() {
-		
+	public Contact() {}
+	
+	/**
+	 * Convert database information into a contact object.
+	 * @param 
+	 */
+	public Contact(final Cursor c) {
+		this.id = c.getLong(0);
+		this.firstName = c.getString(1);
+		this.lastName = c.getString(2);
+		this.homePhone = c.getString(3);
+		this.workPhone = c.getString(4);
+		this.mobilePhone = c.getString(5);
+		this.email = c.getString(6);
+		this.address = c.getString(7);
+		this.dob = c.getString(8);
+		this.imagePath = c.getString(9);
+	}
+	
+	/**
+	 * Returns the contact's fields in a ContentValues object, which can 
+	 * then be inserted into the database.
+	 * @return a ContentValues object with the contact's information.
+	 */
+	public ContentValues getContent() {
+		final ContentValues values = new ContentValues();
+		values.put(COL_ID, id);
+		values.put(COL_FIRSTNAME, firstName);
+		values.put(COL_LASTNAME, lastName);
+		values.put(COL_HOMEPHONE, homePhone);
+		values.put(COL_WORKPHONE, workPhone);
+		values.put(COL_MOBILEPHONE, mobilePhone);
+		values.put(COL_EMAIL, email);
+		values.put(COL_ADDRESS, address);
+		values.put(COL_DOB, dob);
+		values.put(COL_IMAGE, imagePath);
+		return values;
 	}
 	
 	/* GETTERS */
@@ -27,7 +97,7 @@ public class Contact {
 	 * @return = date of birth
 	 */
 	public String getDOB() {
-		return "22/10/1993";
+		return dob;
 	}
 	
 	/**
@@ -35,7 +105,7 @@ public class Contact {
 	 * @return = home address
 	 */
 	public String getAddress() {
-		return "42 Wallaby Way, Sydney";
+		return address;
 	}
 	
 	/**
@@ -43,7 +113,7 @@ public class Contact {
 	 * @return = first name
 	 */
 	public String getFirstName() {
-		return "John";
+		return firstName;
 	}
 	
 	/**
@@ -51,7 +121,7 @@ public class Contact {
 	 * @return = last name
 	 */
 	public String getLastName() {
-		return "Doe";
+		return lastName;
 	}
 	
 	/**
@@ -60,7 +130,7 @@ public class Contact {
 	 * @return = work phone number as a string
 	 */
 	public String getWorkPhone() {
-		return "222222222";
+		return workPhone;
 	}
 	
 	/**
@@ -68,7 +138,7 @@ public class Contact {
 	 * @return = home phone number as a string
 	 */
 	public String getHomePhone() {
-		return "333333333";
+		return homePhone;
 	}
 	
 	/**
@@ -76,7 +146,7 @@ public class Contact {
 	 * @return = mobile phone number as a string
 	 */
 	public String getMobilePhone() {
-		return "123456789";
+		return mobilePhone;
 	}
 
 	/**
@@ -88,7 +158,7 @@ public class Contact {
 	}
 	
 	public String getEmail() {
-		return "dodo@gmail.com";
+		return email;
 	}
 
 	/**
@@ -106,44 +176,6 @@ public class Contact {
 	 */
 	public int getImageId() {
 		return R.drawable.man;
-	}
-	
-	/* SETTERS */
-	
-	public void setDOB() {
-		//
-	}
-	
-	public void setAddress() {
-		//
-	}
-	
-	public void setFirstName() {
-		//
-	}
-	
-	public void setLastName() {
-		//
-	}
-	
-	public void setWorkPhone() {
-		//
-	}
- 
-	public void setHomePhone() {
-		//
-	}
-	
-	public void setMobilePhone() {
-		//
-	}
-	
-	public void setEmail() {
-		//
-	}
-
-	public void setImageId() {
-		//
 	}
 
 }
