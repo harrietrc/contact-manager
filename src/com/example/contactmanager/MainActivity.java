@@ -98,7 +98,6 @@ public class MainActivity extends Activity {
 			// filler
 			return true;
 		case R.id.action_add:
-			// do stuff
 			return true;
 		case R.id.action_sort:
 			// do stuff

@@ -2,14 +2,14 @@ package com.example.contactmanager;
 
 import java.util.Comparator;
 
-public class NumberComparator implements Comparator<Contact> {
+public class NumberComparator implements Comparator<ContactHelper> {
 
 	public boolean equals(Object object) {
 		return false;
 	}
 
 	@Override
-	public int compare(Contact lhs, Contact rhs) {
+	public int compare(ContactHelper lhs, ContactHelper rhs) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

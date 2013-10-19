@@ -2,10 +2,10 @@ package com.example.contactmanager;
 
 import java.util.Comparator;
 
-public class FirstNameComparator implements Comparator<Contact> {
+public class FirstNameComparator implements Comparator<ContactHelper> {
 
 	@Override
-	public int compare(Contact lhs, Contact rhs) {
+	public int compare(ContactHelper lhs, ContactHelper rhs) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

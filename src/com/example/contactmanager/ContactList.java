@@ -60,8 +60,8 @@ public class ContactList {
 	/**
 	 * Adds a contact to the contact list.
 	 */
-	public static void addContact() {
-		_contacts.add(new Contact()); /* May not work like this in final implementation, but plausible enough */
+	public void addContact() {
+		
 	}
 	
 	/**
