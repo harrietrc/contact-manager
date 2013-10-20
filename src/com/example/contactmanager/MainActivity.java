@@ -80,7 +80,7 @@ public class MainActivity extends ListActivity {
 		_adapter = new ContactListAdapter(this, _cursor);
 		_listView.setAdapter(_adapter);
 		
-		mock();
+		//mock();
 		_adapter.getCursor().requery(); // this works, but may be bad design?
 	}
 

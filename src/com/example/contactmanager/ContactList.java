@@ -53,6 +53,7 @@ public class ContactList {
 	 */
 	public Contact createContact(String fName, String lName, String hPhone, String wPhone,
 			String mPhone, String address, String email, String dob) {
+		open();
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.COL_FIRSTNAME, fName);
 		values.put(DatabaseHelper.COL_LASTNAME, lName);
@@ -69,7 +70,30 @@ public class ContactList {
 				DatabaseHelper.COL_ID + " = " + insertID, null, null, null, null);
 		cursor.moveToFirst();
 		Contact newContact = cursorToContact(cursor);
+		close();
 		return newContact;
+	}
+	
+	/**
+	 * Edits the values of a contact.
+	 */
+	public void editContact(long id, String fName, String lName,
+			String email, String hPhone, String mPhone, String wPhone,
+			String dob, String image, String address) {
+		open();
+		final ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.COL_ID, id);
+		values.put(DatabaseHelper.COL_FIRSTNAME, fName);
+		values.put(DatabaseHelper.COL_LASTNAME, lName);
+		values.put(DatabaseHelper.COL_HOMEPHONE, hPhone);
+		values.put(DatabaseHelper.COL_WORKPHONE, wPhone);
+		values.put(DatabaseHelper.COL_MOBILEPHONE, mPhone);
+		values.put(DatabaseHelper.COL_EMAIL, email);
+		values.put(DatabaseHelper.COL_ADDRESS, address);
+		values.put(DatabaseHelper.COL_DOB, dob);
+		//values.put(DatabaseHelper.COL_IMAGE, image);
+		_db.update(DatabaseHelper.TABLE_NAME, values, DatabaseHelper.COL_ID + "=" + id, null);
+		close();
 	}
 	
 	/** 

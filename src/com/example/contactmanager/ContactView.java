@@ -75,7 +75,7 @@ public class ContactView extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_edit:
 			Intent toEdit = new Intent(ContactView.this, EditContactView.class);
-			// toEdit.putExtra("contact", );
+			toEdit.putExtra("contactID", _id);
 			startActivity(toEdit);
 			return true;
 		case R.id.action_delete:

@@ -6,6 +6,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +24,7 @@ public class EditContactView extends Activity {
 	private Contact _contact;
 	private InputMethodManager _imm;
 	private boolean _fieldExpandedFlag;
-	private DatabaseHelper _c;
+	private long _id;
 	
 	private ImageView image;
 	private EditText first;
@@ -32,16 +35,6 @@ public class EditContactView extends Activity {
 	private EditText email;
 	private EditText address;
 	private EditText dob;
-	
-	// other headings
-	private TextView first2;
-	private TextView last2;
-	private TextView mobile2;
-	private TextView home2;
-	private TextView work2;
-	private TextView email2;
-	private TextView address2;
-	private TextView dob2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +47,23 @@ public class EditContactView extends Activity {
 		// Sets up the keyboard
 		_imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		
-		/* Here I looked into how to pass the contact to the new activity. I'm not really sure how the contacts
-		 * database is going to work and suspect we'll be learning a bit about databases later. Because of this 
-		 * I was unwilling to fiddle around with serials and parcels so for now I'm just going to create a new
-		 * object. */
-		//mockContact();
+		/* Make this a method */
+		
+		// Set up database
+		DatabaseHelper dbh = new DatabaseHelper(this);
+		SQLiteDatabase db = dbh.getWritableDatabase();
+		
+		// Get the contact
+		Intent intent = getIntent();
+		_id = intent.getLongExtra("contactID", 0);
+		Cursor cursor = db
+				.rawQuery(
+						"SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE _id = " +
+				_id, null);
+		cursor.moveToFirst();
+		_contact = ContactList.cursorToContact(cursor);
+		
+		// Set up the views and action bar
 		setFields();
 		initialiseActionBar();
 	}
@@ -78,30 +83,47 @@ public class EditContactView extends Activity {
 		// switch to actionbarsherlock.
 	}
 	
-	/**
-	 * Sets all the text fields in the corresponding layout.
-	 */
-	private void setFields() {
-		image.setImageResource(_contact.getImageId());
-		first.setText(_contact.getFirstName(), TextView.BufferType.EDITABLE);
-		last.setText(_contact.getLastName(), TextView.BufferType.EDITABLE);
-		mobile.setText(_contact.getMobilePhone(), TextView.BufferType.EDITABLE);
-		home.setText(_contact.getHomePhone(), TextView.BufferType.EDITABLE);
-		work.setText(_contact.getWorkPhone(), TextView.BufferType.EDITABLE);
-		email.setText(_contact.getEmail(), TextView.BufferType.EDITABLE);
-		address.setText(_contact.getAddress(), TextView.BufferType.EDITABLE);
-		dob.setText(_contact.getDOB(), TextView.BufferType.EDITABLE);
-		
-		// Set the other headings
-		first2.setText(_contact.getFirstName());
-		last2.setText(_contact.getLastName());
-		mobile2.setText(_contact.getMobilePhone());
-		home2.setText(_contact.getHomePhone());
-		work2.setText(_contact.getWorkPhone());
-		email2.setText(_contact.getEmail());
-		address2.setText(_contact.getAddress());
-		dob2.setText(_contact.getDOB());
-	}
+	 /**
+     * Sets all the text fields in the corresponding layout.
+     */
+    private void setFields() {
+            image = (ImageView) findViewById(R.id.image);
+            image.setImageResource(_contact.getImageId());
+            first = (EditText)findViewById(R.id.editFirstName);
+            first.setText(_contact.getFirstName(), TextView.BufferType.EDITABLE);
+            last = (EditText)findViewById(R.id.editLastName);
+            last.setText(_contact.getLastName(), TextView.BufferType.EDITABLE);
+            mobile = (EditText)findViewById(R.id.editMobilePhone);
+            mobile.setText(_contact.getMobilePhone(), TextView.BufferType.EDITABLE);
+            home = (EditText)findViewById(R.id.editHomePhone);
+            home.setText(_contact.getHomePhone(), TextView.BufferType.EDITABLE);
+            work = (EditText)findViewById(R.id.editWorkPhone);
+            work.setText(_contact.getWorkPhone(), TextView.BufferType.EDITABLE);
+            email = (EditText)findViewById(R.id.editEmail);
+            email.setText(_contact.getEmail(), TextView.BufferType.EDITABLE);
+            address = (EditText)findViewById(R.id.editAddress);
+            address.setText(_contact.getAddress(), TextView.BufferType.EDITABLE);
+            dob = (EditText)findViewById(R.id.editDOB);
+            dob.setText(_contact.getDOB(), TextView.BufferType.EDITABLE);
+            
+            // Set the other headings
+            TextView first2 = (TextView)findViewById(R.id.firstName2);
+            first2.setText(_contact.getFirstName());
+            TextView last2 = (TextView)findViewById(R.id.lastName2);
+            last2.setText(_contact.getLastName());
+            TextView mobile2 = (TextView)findViewById(R.id.mobilePhone2);
+            mobile2.setText(_contact.getMobilePhone());
+            TextView home2 = (TextView)findViewById(R.id.homePhone2);
+            home2.setText(_contact.getHomePhone());
+            TextView work2 = (TextView)findViewById(R.id.workPhone2);
+            work2.setText(_contact.getWorkPhone());
+            TextView email2 = (TextView)findViewById(R.id.email2);
+            email2.setText(_contact.getEmail());
+            TextView address2 = (TextView)findViewById(R.id.address2);
+            address2.setText(_contact.getAddress());
+            TextView dob2 = (TextView)findViewById(R.id.dob2);
+            dob2.setText(_contact.getDOB());
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,8 +156,9 @@ public class EditContactView extends Activity {
 	 * Saves the data from the views to the database.
 	 */
 	public void saveContact() {
+		final ContactList ls = new ContactList(this);
 		String f = first.getText().toString();
-		String l = first.getText().toString();
+		String l = last.getText().toString();
 		String e = email.getText().toString();
 		String w = work.getText().toString();
 		String h = home.getText().toString();
@@ -143,7 +166,7 @@ public class EditContactView extends Activity {
 		String a = address.getText().toString();
 		String d = dob.getText().toString();
 		//String i = image.getText().toString();
-		_c.editContact(0, f, l, e, h, m, w, d, null, a);
+		ls.editContact(_id, f, l, e, h, m, w, d, null, a);
 	}
 
 	/* Methods that deal with clicks. Not the best way to do this, so I may rejig it if I find a better way. 

@@ -1,11 +1,7 @@
 package com.example.contactmanager;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -50,26 +46,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_TABLE);
-	}
-	
-	/**
-	 * Edits the values of a contact.
-	 */
-	public void editContact(long id, String fName, String lName,
-			String email, String hPhone, String mPhone, String wPhone,
-			String dob, String image, String address) {
-		final ContentValues values = new ContentValues();
-		values.put(COL_ID, id);
-		values.put(COL_FIRSTNAME, fName);
-		values.put(COL_LASTNAME, lName);
-		values.put(COL_HOMEPHONE, hPhone);
-		values.put(COL_WORKPHONE, wPhone);
-		values.put(COL_MOBILEPHONE, mPhone);
-		values.put(COL_EMAIL, email);
-		values.put(COL_ADDRESS, address);
-		values.put(COL_DOB, dob);
-		values.put(COL_IMAGE, image);
-		_db.update(DB_TABLE, values, COL_ID + "=" + id, null);
 	}
 
 	@Override
