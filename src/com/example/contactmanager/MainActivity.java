@@ -108,7 +108,14 @@ public class MainActivity extends ListActivity implements ActionBar.OnNavigation
 			// filler
 			return true;
 		case R.id.action_add:
-			// do stuff
+			Contact contact = _dm.newContact();
+			long id = contact.getId();
+			Bundle extra = new Bundle();
+			extra.putLong("contactID", id);
+			extra.putString("activity", "add");
+			Intent toContact = new Intent(this, EditContactView.class);
+			toContact.putExtras(extra);
+			startActivity(toContact);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

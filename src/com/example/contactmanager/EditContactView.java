@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -25,6 +23,7 @@ public class EditContactView extends Activity {
 	private InputMethodManager _imm;
 	private boolean _fieldExpandedFlag;
 	private long _id;
+	private String _activity;  // either 'add' or 'edit'
 	
 	private ImageView image;
 	private EditText first;
@@ -55,7 +54,8 @@ public class EditContactView extends Activity {
 		
 		// Get the contact
 		Intent intent = getIntent();
-		_id = intent.getLongExtra("contactID", 0);
+		Bundle extra = intent.getExtras();
+		_id = extra.getLong("contactID", 0);
 		Cursor cursor = db
 				.rawQuery(
 						"SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE _id = " +
@@ -64,6 +64,7 @@ public class EditContactView extends Activity {
 		_contact = ContactList.cursorToContact(cursor);
 		
 		// Set up the views and action bar
+		_activity = extra.getString("activity", "edit");
 		setFields();
 		initialiseActionBar();
 	}
@@ -74,8 +75,14 @@ public class EditContactView extends Activity {
 	private void initialiseActionBar()
 	{
 		final ActionBar actionBar = getActionBar();
-		actionBar.setTitle("Editing "+ _contact.getFullName());
-		// 
+		
+		// Allows differentiation between edit and add contact screens
+		if (_activity.equals("edit")) {
+			actionBar.setTitle("Editing "+ _contact.getFullName());
+		} else {
+			actionBar.setTitle("New Contact");
+		}
+		
 		actionBar.setLogo(R.drawable.cancel);
 		actionBar.setHomeButtonEnabled(true);
 		ImageView view = (ImageView)findViewById(android.R.id.home);
@@ -132,7 +139,6 @@ public class EditContactView extends Activity {
 		return true;
 	}
 	
-	
 	/**
 	 * Provides different actions that are executed when an actionbar
 	 * action is selected.
@@ -141,9 +147,14 @@ public class EditContactView extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_save:
 			saveContact();
+			if (_activity.equals("add")) {
+				Intent toContact = new Intent(this, ContactView.class);
+				toContact.putExtra("contactID", _id);
+				startActivity(toContact);
+			}
 			finish();
 			return true;
-		case android.R.id.home:
+		case android.R.id.home: // I.e. cancel (I'm using the home button for convenience)
 			// do other stuff
 			finish();
 			return true;

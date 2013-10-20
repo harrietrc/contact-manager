@@ -85,6 +85,14 @@ public class ContactList {
 	}
 	
 	/**
+	 * Creates a new contact and initialises its fields to empty strings.
+	 * @return = new blank contact.
+	 */
+	public Contact newContact() {
+		return createContact("","","","","","","", "");
+	}
+	
+	/**
 	 * Edits the values of a contact.
 	 */
 	public void editContact(long id, String fName, String lName,

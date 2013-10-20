@@ -53,6 +53,7 @@ public class ContactView extends Activity {
 		
 		// Set up the action bar
 		initialiseActionBar();
+
 	}
 	
 
@@ -84,7 +85,10 @@ public class ContactView extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_edit:
 			Intent toEdit = new Intent(ContactView.this, EditContactView.class);
-			toEdit.putExtra("contactID", _id);
+			Bundle extra = new Bundle();
+			extra.putLong("contactID", _id);
+			extra.putString("activity", "edit");
+			toEdit.putExtras(extra);
 			startActivity(toEdit);
 			return true;
 		case R.id.action_delete:
@@ -107,7 +111,6 @@ public class ContactView extends Activity {
 						}).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								// Can I just leave this blank?
 							}
 						});
 					return builder.create();
