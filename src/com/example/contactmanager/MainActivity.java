@@ -1,10 +1,7 @@
 package com.example.contactmanager;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.app.ActionBar;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,15 +10,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-//import android.widget.ArrayAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ListActivity implements ActionBar.OnNavigationListener {
 
 	private ListView _listView;
 	private ContactListAdapter _adapter;
 	private ContactList _dm;
 	private Cursor _cursor;
+	private String _sortOrder;
+	
+	// String giving the default column to sort by.
+	public static final String DEFAULT_SORT_ORDER = "ORDER BY " + DatabaseHelper.COL_FIRSTNAME + " ASC";
 
 	/**
 	 * Initialises the action bar with a spinner for sorting.
@@ -31,27 +32,28 @@ public class MainActivity extends ListActivity {
 		actionBar.setDisplayShowHomeEnabled(false);
 		actionBar.setLogo(null);
 
-		// actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		// Sorting options
-		// final String[] spinnerValues =
-		// getResources().getStringArray(R.array.sort_options);
+		 //Sorting options
+		 final String[] spinnerValues =
+		 getResources().getStringArray(R.array.sort_options);
 
-		// ArrayAdapter<String> adapter = new
-		// ArrayAdapter<String>(actionBar.getThemedContext(),
-		// android.R.layout.simple_spinner_item, android.R.id.text1,
-		// spinnerValues);
+		 ArrayAdapter<String> adapter = new  ArrayAdapter<String>(actionBar.getThemedContext(),
+		 android.R.layout.simple_spinner_item, android.R.id.text1,
+		 spinnerValues);
 
-		// adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		// Set up the navigation for the spinner
-		// actionBar.setListNavigationCallbacks(adapter, this);
+		 //Set up the navigation for the spinner
+		 actionBar.setListNavigationCallbacks(adapter, this);
 
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		_sortOrder = DEFAULT_SORT_ORDER;
 
 		// Sets the action bar up with a spinner for sorting
 		initialiseActionBar();
@@ -76,7 +78,7 @@ public class MainActivity extends ListActivity {
 			}
 		});
 		
-		_cursor = _dm.getAllData();
+		_cursor = _dm.getAllData(_sortOrder);
 		_adapter = new ContactListAdapter(this, _cursor);
 		_listView.setAdapter(_adapter);
 		
@@ -108,9 +110,6 @@ public class MainActivity extends ListActivity {
 		case R.id.action_add:
 			// do stuff
 			return true;
-		case R.id.action_sort:
-			// do stuff
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -124,7 +123,7 @@ public class MainActivity extends ListActivity {
 		
 		// This is the only method of refreshing that I could get to work. 
 		// It seems to be a relatively common method.
-		_cursor = _dm.getAllData();
+		_cursor = _dm.getAllData(_sortOrder);
 		_adapter.swapCursor(_cursor);
 		
 		super.onResume();
@@ -133,6 +132,33 @@ public class MainActivity extends ListActivity {
 	protected void onPause() {
 		_dm.close();
 		super.onPause();
+	}
+
+	/**
+	 * Should return true if handled, false otherwise.
+	 */
+	@Override
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		if (itemPosition == 0) {
+			_sortOrder = "ORDER BY " + DatabaseHelper.COL_FIRSTNAME + " ASC";
+			_cursor = _dm.getAllData(_sortOrder);
+			_adapter.swapCursor(_cursor);
+			return true;
+		} else if (itemPosition == 1) {
+			_sortOrder = "ORDER BY " + DatabaseHelper.COL_LASTNAME + " ASC";
+			_cursor = _dm.getAllData(_sortOrder);
+			_adapter.swapCursor(_cursor);
+			return true;
+		} else if (itemPosition == 2) {
+			_sortOrder = "ORDER BY CASE WHEN LENGTH(mobilePhone) > 0 THEN " + DatabaseHelper.COL_MOBILEPHONE
+					+ " WHEN LENGTH(homePhone) > 0 THEN " + DatabaseHelper.COL_HOMEPHONE + 
+					" ELSE " + DatabaseHelper.COL_WORKPHONE + " END";
+			_cursor = _dm.getAllData(_sortOrder);
+			_adapter.swapCursor(_cursor);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

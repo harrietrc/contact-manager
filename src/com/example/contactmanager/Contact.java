@@ -109,9 +109,9 @@ public class Contact {
 	 * @return = the contact's primary number.
 	 */
 	public String getPrimaryNumber() {
-		if (_mobilePhone != null) {
+		if (_mobilePhone.length() != 0) {
 			return _mobilePhone;
-		} else if (_homePhone != null) {
+		} else if (_homePhone.length() != 0) {
 			return _homePhone;
 		} else {
 			return _workPhone;

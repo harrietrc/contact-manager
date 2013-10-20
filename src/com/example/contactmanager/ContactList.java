@@ -18,6 +18,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class ContactList {
 	
 	private Comparator<Contact> _contactComparator;
+	private List<Contact> _allContacts;
 	
 	// Database data
 	private SQLiteDatabase _db;
@@ -32,6 +33,7 @@ public class ContactList {
 	
 	public ContactList(Context context) {
 		_dbHelper = new DatabaseHelper(context);
+		//_allContacts = getAllContacts();
 	}
 	
 	/**
@@ -127,8 +129,13 @@ public class ContactList {
 		return ls;
 	}
 	
-	public Cursor getAllData() {
-		String buildSQL = "SELECT * FROM " + DatabaseHelper.TABLE_NAME;
+	/**
+	 * Gets all the data in the database as a cursor. Sort order can be specified using the column name to be sorted by.
+	 * @param sortOrder = the DatabaseHelper column name to be sorted by.
+	 * @return
+	 */
+	public Cursor getAllData(String sortOrder) {
+		String buildSQL = "SELECT * FROM " + DatabaseHelper.TABLE_NAME + " " + sortOrder;
 		return _db.rawQuery(buildSQL, null);
 	}
 	
@@ -154,18 +161,5 @@ public class ContactList {
 		return contact;
 	}
 	
-	/**
-	 * Sorts the contacts using the object's comparator.
-	 */
-	public static void sortContacts() {
-		
-	}
-	
-	/**
-	 * Sets the comparator to sort by either first name, last name, or number.
-	 */
-	public static void setComparator() {
-		
-	}
 }
 
