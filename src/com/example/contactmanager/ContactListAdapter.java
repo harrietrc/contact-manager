@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 class ContactListAdapter extends CursorAdapter {
 
-	private Context context;
-
 	public ContactListAdapter(Context context, Cursor c) {
 		super(context, c);
 	}
@@ -29,8 +27,6 @@ class ContactListAdapter extends CursorAdapter {
 		
 		// Change cursor to contact
 		Contact contact = ContactList.cursorToContact(cursor);
-		
-		System.out.println("Name: " + contact.getFirstName());
 		
 		// Populate the row with data
 		name.setText(contact.getFullName());

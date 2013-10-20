@@ -30,7 +30,7 @@ public class ContactView extends Activity {
 
 		// Get ID of contact
 		Intent intent = getIntent();
-		_id = intent.getLongExtra("key", 0);
+		_id = intent.getLongExtra("contactID", 0);
 
 		// Set up database
 		DatabaseHelper dbh = new DatabaseHelper(this);
@@ -39,11 +39,10 @@ public class ContactView extends Activity {
 		// Get Contact object from database row
 		Cursor cursor = db
 				.rawQuery(
-						"SELECT * FROM Contact WHERE id = " +
+						"SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE _id = " +
 				_id, null);
 		cursor.moveToFirst();
 		_contact = ContactList.cursorToContact(cursor);
-		
 		setViews();
 		initialiseActionBar();
 

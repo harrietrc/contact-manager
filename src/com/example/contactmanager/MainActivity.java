@@ -79,11 +79,12 @@ public class MainActivity extends ListActivity {
 		_adapter = new ContactListAdapter(this, _dm.getAllData());
 		_listView.setAdapter(_adapter);
 		
-		mock();
+		//mock();
+		//_adapter.getCursor().requery(); // this works, but may be bad design?
 	}
 
 	public void mock() {
-		_dm.createContact("Jane", "Doe", "445 123", "446 123",
+		_dm.createContact("Jasper", "Doe", "445 123", "446 123",
 				"021 123", "4 Domain St.", "my@email.com", "22/10/1993");
 	}
 	

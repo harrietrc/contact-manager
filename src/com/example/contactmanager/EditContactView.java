@@ -79,13 +79,6 @@ public class EditContactView extends Activity {
 	}
 	
 	/**
-	 * Just temporary until I figure out how the contact database is going to work.
-	 */
-	private void mockContact() {
-		_contact = new Contact();
-	}
-	
-	/**
 	 * Sets all the text fields in the corresponding layout.
 	 */
 	private void setFields() {
