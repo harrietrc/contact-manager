@@ -3,6 +3,8 @@ package com.example.contactmanager;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 //import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,47 +17,59 @@ import android.widget.TextView;
  * attributes.
  */
 public class ContactView extends Activity {
-	
+
 	private Contact _contact;
+	private long _id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		_contact = new Contact(); // Obviously I'll change this.
-		//Intent intent = getIntent();				  <-
-		//String value = intent.getStringExtra("key") <- useful later
+
+		// Set up layout
 		setContentView(R.layout.contact_view);
-		setViews();	
+
+		// Get ID of contact
+		Intent intent = getIntent();
+		_id = intent.getLongExtra("key", 0);
+
+		// Set up database
+		DatabaseHelper dbh = new DatabaseHelper(this);
+		SQLiteDatabase db = dbh.getWritableDatabase();
+		
+		// Get Contact object from database row
+		Cursor cursor = db
+				.rawQuery(
+						"SELECT * FROM Contact WHERE id = " +
+				_id, null);
+		cursor.moveToFirst();
+		_contact = ContactList.cursorToContact(cursor);
+		
+		setViews();
 		initialiseActionBar();
+
 	}
-	
+
 	/**
 	 * Initialises the action bar.
 	 */
-	private void initialiseActionBar()
-	{
+	private void initialiseActionBar() {
 		final ActionBar actionBar = getActionBar();
 		actionBar.setTitle(_contact.getFullName());
 		actionBar.setLogo(R.drawable.back);
 		actionBar.setHomeButtonEnabled(true);
-		ImageView view = (ImageView)findViewById(android.R.id.home);
+		ImageView view = (ImageView) findViewById(android.R.id.home);
 		view.setPadding(0, 0, 40, 0);
 	}
-	
+
 	/**
-	 * Provides different actions that are executed when an actionbar
-	 * action is selected.
+	 * Provides different actions that are executed when an actionbar action is
+	 * selected.
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_edit:
 			Intent toEdit = new Intent(ContactView.this, EditContactView.class);
-			/* Here I looked into how to pass the contact to the new activity. I'm not really sure how the contacts
-			 * database is going to work and suspect we'll be learning a bit about databases later. Because of this 
-			 * I was unwilling to fiddle around with serials and parcels so for now I'm just going to create a new
-			 * object. */
-			//toEdit.putExtra("contact", );
+			// toEdit.putExtra("contact", );
 			startActivity(toEdit);
 			return true;
 		case R.id.action_delete:
@@ -63,14 +77,15 @@ public class ContactView extends Activity {
 			dialogue.show(getFragmentManager(), "dialogue");
 			return true;
 		case android.R.id.home:
-			// Should return the user to the same place in the main list that they were at before.
+			// Should return the user to the same place in the main list that
+			// they were at before.
 			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	/**
 	 * Inflates the action bar and adds items to it.
 	 */
@@ -80,12 +95,7 @@ public class ContactView extends Activity {
 		getMenuInflater().inflate(R.menu.view, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
-	/**
-	 * Set up all the views. Could have set up a special structure as in 
-	 * ContactListAdapter, but since they're only required in this method
-	 * so I haven't. 
-	 * */
+
 	private void setViews() {
 		ImageView image = (ImageView) findViewById(R.id.image);
 		TextView name = (TextView) findViewById(R.id.fullName);
@@ -104,6 +114,5 @@ public class ContactView extends Activity {
 		address.setText(_contact.getAddress());
 		dob.setText(_contact.getDOB());
 	}
-	
-}
 
+}

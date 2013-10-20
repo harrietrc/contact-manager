@@ -21,7 +21,7 @@ public class EditContactView extends Activity {
 	private Contact _contact;
 	private InputMethodManager _imm;
 	private boolean _fieldExpandedFlag;
-	private ContactHelper _c;
+	private DatabaseHelper _c;
 	
 	private ImageView image;
 	private EditText first;
@@ -61,13 +61,6 @@ public class EditContactView extends Activity {
 		//mockContact();
 		setFields();
 		initialiseActionBar();
-		
-		// if new
-		_c = new ContactHelper(this);
-		//_c.open();
-		_c.newContent(null, null, null, null, null, null, null, null, null);
-		//_c.close();
-		// if edit
 	}
 	
 	/**
@@ -157,7 +150,7 @@ public class EditContactView extends Activity {
 		String a = address.getText().toString();
 		String d = dob.getText().toString();
 		//String i = image.getText().toString();
-		_c.editContent(0, f, l, e, h, m, w, d, null, a);
+		_c.editContact(0, f, l, e, h, m, w, d, null, a);
 	}
 
 	/* Methods that deal with clicks. Not the best way to do this, so I may rejig it if I find a better way. 

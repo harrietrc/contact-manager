@@ -2,45 +2,128 @@ package com.example.contactmanager;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
- * Having this as a singleton sort of makes sense in that multiple activities are going to need to access it 
- * (DisplayContact to display the correct contact, MainActivity for obvious reasons) and it will only need to be
- * instantiated once. I might change this, however, as singletons seem to considered bad design in every context
- * except logging.
+ * Class representing the contact list data model. Contains operations for adding, deleting,
+ * and modifying contacts. Very dependent on DatabaseHelper, which establishes and manages the
+ * database.
  * @author hrob748
- *
  */
 public class ContactList {
 	
-	public static ArrayList<Contact> _contacts;
 	private Comparator<Contact> _contactComparator;
 	
-	// Singleton stuff
-	private static ContactList singletonInstance = null;
+	// Database data
+	private SQLiteDatabase _db;
+	private DatabaseHelper _dbHelper;
+	private String[] _cols = new String[] {
+			DatabaseHelper.COL_ID, DatabaseHelper.COL_FIRSTNAME, DatabaseHelper.COL_LASTNAME, DatabaseHelper.COL_HOMEPHONE,
+			DatabaseHelper.COL_WORKPHONE, DatabaseHelper.COL_MOBILEPHONE, DatabaseHelper.COL_EMAIL, DatabaseHelper.COL_ADDRESS,
+			DatabaseHelper.COL_DOB
+	};
+	
+	
+	
+	public ContactList(Context context) {
+		_dbHelper = new DatabaseHelper(context);
+	}
 	
 	/**
-	 * Returns the instance of the ContactList and prevents it from
-	 * being instantiated more than once.
-	 * @return = the ContactList object
+	 * Open the database.
 	 */
-	public static ContactList getContactList() {
-		if (singletonInstance == null) {
-			singletonInstance = new ContactList();
-		} 
-		return singletonInstance;
+	public void open() {
+		_db = _dbHelper.getWritableDatabase();
 	}
 	
-	private ContactList() {
-		_contacts = new ArrayList<Contact>();
-		mockList(); /* TEMPORARY */
+	/**
+	 * Close the database.
+	 */
+	public void close() {
+		_dbHelper.close();
 	}
 	
-	/* TEMPORARY */
-	public void mockList() {
-		for (int i=0; i<5; i++) {
-			_contacts.add(new Contact());
+	/**
+	 * Create a contact and add it to the database.
+	 */
+	public Contact createContact(String fName, String lName, String hPhone, String wPhone,
+			String mPhone, String address, String email, String dob) {
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.COL_FIRSTNAME, fName);
+		values.put(DatabaseHelper.COL_LASTNAME, lName);
+		values.put(DatabaseHelper.COL_HOMEPHONE, hPhone);
+		values.put(DatabaseHelper.COL_WORKPHONE, wPhone);
+		values.put(DatabaseHelper.COL_MOBILEPHONE, mPhone);
+		values.put(DatabaseHelper.COL_EMAIL, email);
+		values.put(DatabaseHelper.COL_ADDRESS, address);
+		values.put(DatabaseHelper.COL_DOB, dob);
+		//values.put(_dbHelper.COL_IMAGE, image);
+		long insertID = _db.insert(DatabaseHelper.TABLE_NAME, null, values);
+		values.put(DatabaseHelper.COL_ID, insertID);
+		Cursor cursor = _db.query(DatabaseHelper.TABLE_NAME, _cols,
+				DatabaseHelper.COL_ID + " = " + insertID, null, null, null, null);
+		cursor.moveToFirst();
+		Contact newContact = cursorToContact(cursor);
+		return newContact;
+	}
+	
+	/** 
+	 * Deletes a contact from the database.
+	 * @param contact = The contact to be deleted.
+	 */
+	public void deleteContact(Contact contact) {
+		long id = contact.getId();
+		_db.delete(DatabaseHelper.TABLE_NAME, DatabaseHelper.COL_ID + " = " + id,
+				null);
+	}
+	
+	/**
+	 * Returns a list of contact objects as constructed from the database.
+	 * @return = a list of all the contacts in the database.
+	 */
+	public List<Contact> getAllContacts() {
+		List<Contact> ls = new ArrayList<Contact>();
+		
+		Cursor c = _db.query(DatabaseHelper.TABLE_NAME, _cols, null, null, null, 
+				null, null);
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			Contact contact = cursorToContact(c);
+			ls.add(contact);
+			c.moveToNext();
 		}
+		c.close();
+		return ls;
+	}
+	
+	public Cursor getAllData() {
+		String buildSQL = "SELECT * FROM " + DatabaseHelper.TABLE_NAME;
+		return _db.rawQuery(buildSQL, null);
+	}
+	
+	/**
+	 * Converts a cursor into a contact object.
+	 * @param cursor = the cursor to be converted
+	 * @return = a Contact object
+	 */
+	public static Contact cursorToContact(Cursor cursor) {
+		Contact contact = new Contact();
+		contact.setID(cursor.getLong(0));
+		contact.setFirstName(cursor.getString(1));
+		contact.setLastName(cursor.getString(2));
+		contact.setHomePhone(cursor.getString(3));
+		contact.setWorkPhone(cursor.getString(4));
+		contact.setMobilePhone(cursor.getString(5));
+		contact.setEmail(cursor.getString(6));
+		contact.setAddress(cursor.getString(7));
+		contact.setDOB(cursor.getString(8));
+		//contact.setImageId(null);
+		return contact;
 	}
 	
 	/**
@@ -55,28 +138,6 @@ public class ContactList {
 	 */
 	public static void setComparator() {
 		
-	}
-	
-	/**
-	 * Adds a contact to the contact list.
-	 */
-	public void addContact() {
-		
-	}
-	
-	/**
-	 * Deletes a specific contact from the contact list.
-	 */
-	public static void deleteContact() {
-		
-	}
-
-	/**
-	 * Returns the number of contacts in the contact list.
-	 * @return = the length of the contact list.
-	 */
-	public int size() {
-		return _contacts.size();
 	}
 }
 
