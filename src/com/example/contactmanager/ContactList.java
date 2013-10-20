@@ -1,9 +1,5 @@
 package com.example.contactmanager;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,23 +13,17 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class ContactList {
 	
-	private Comparator<Contact> _contactComparator;
-	private List<Contact> _allContacts;
-	
 	// Database data
 	private SQLiteDatabase _db;
-	private DatabaseHelper _dbHelper;
+	private static DatabaseHelper _dbHelper;
 	private String[] _cols = new String[] {
 			DatabaseHelper.COL_ID, DatabaseHelper.COL_FIRSTNAME, DatabaseHelper.COL_LASTNAME, DatabaseHelper.COL_HOMEPHONE,
 			DatabaseHelper.COL_WORKPHONE, DatabaseHelper.COL_MOBILEPHONE, DatabaseHelper.COL_EMAIL, DatabaseHelper.COL_ADDRESS,
 			DatabaseHelper.COL_DOB
 	};
 	
-	
-	
 	public ContactList(Context context) {
 		_dbHelper = new DatabaseHelper(context);
-		//_allContacts = getAllContacts();
 	}
 	
 	/**
@@ -44,11 +34,29 @@ public class ContactList {
 	}
 	
 	/**
+	 * Gets a contact by its corresponding ID.
+	 * @param id = the ID of the required contact.
+	 * @return = a Contact object corresponding to the ID.
+	 */
+	public static Contact getContactByID(long id) {
+		SQLiteDatabase db = _dbHelper.getWritableDatabase();
+		Cursor cursor = db
+				.rawQuery(
+						"SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE _id = " +
+				id, null);
+		cursor.moveToFirst();
+		Contact contact = ContactList.cursorToContact(cursor);
+		contact.setID(id);
+		return contact;
+	}
+	
+	/**
 	 * Close the database.
 	 */
 	public void close() {
 		_dbHelper.close();
 	}
+	
 	
 	/**
 	 * Create a contact and add it to the database.
@@ -110,24 +118,6 @@ public class ContactList {
 		close();
 	}
 	
-	/**
-	 * Returns a list of contact objects as constructed from the database.
-	 * @return = a list of all the contacts in the database.
-	 */
-	public List<Contact> getAllContacts() {
-		List<Contact> ls = new ArrayList<Contact>();
-		
-		Cursor c = _db.query(DatabaseHelper.TABLE_NAME, _cols, null, null, null, 
-				null, null);
-		c.moveToFirst();
-		while (!c.isAfterLast()) {
-			Contact contact = cursorToContact(c);
-			ls.add(contact);
-			c.moveToNext();
-		}
-		c.close();
-		return ls;
-	}
 	
 	/**
 	 * Gets all the data in the database as a cursor. Sort order can be specified using the column name to be sorted by.

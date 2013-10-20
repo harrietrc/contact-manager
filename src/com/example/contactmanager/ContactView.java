@@ -5,12 +5,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-//import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +21,17 @@ public class ContactView extends Activity {
 
 	private Contact _contact;
 	private long _id;
+	
+	/* Views */
+	
+	private ImageView _image;
+	private TextView _name;
+	private TextView _mobile;
+	private TextView _home;
+	private TextView _work;
+	private TextView _email;
+	private TextView _address;
+	private TextView _dob;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,22 +43,24 @@ public class ContactView extends Activity {
 		// Get ID of contact
 		Intent intent = getIntent();
 		_id = intent.getLongExtra("contactID", 0);
-
-		// Set up database
-		DatabaseHelper dbh = new DatabaseHelper(this);
-		SQLiteDatabase db = dbh.getWritableDatabase();
 		
-		// Get Contact object from database row
-		Cursor cursor = db
-				.rawQuery(
-						"SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE _id = " +
-				_id, null);
-		cursor.moveToFirst();
-		_contact = ContactList.cursorToContact(cursor);
-		_contact.setID(_id);
+		// Set the contact
+		_contact = ContactList.getContactByID(_id);
+		
+		// Set up the views
+		initialiseViews();
 		setViews();
+		
+		// Set up the action bar
 		initialiseActionBar();
+	}
+	
 
+	
+	protected void onResume() {
+		_contact = ContactList.getContactByID(_id);
+		setViews();
+		super.onResume();
 	}
 
 	/**
@@ -127,23 +136,32 @@ public class ContactView extends Activity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	/**
+	 * Sets the text in each of the text and image views.
+	 */
 	private void setViews() {
-		ImageView image = (ImageView) findViewById(R.id.image);
-		TextView name = (TextView) findViewById(R.id.fullName);
-		TextView mobile = (TextView) findViewById(R.id.mobilePhone);
-		TextView home = (TextView) findViewById(R.id.homePhone);
-		TextView work = (TextView) findViewById(R.id.workPhone);
-		TextView email = (TextView) findViewById(R.id.emailAddress);
-		TextView address = (TextView) findViewById(R.id.homeAddress);
-		TextView dob = (TextView) findViewById(R.id.dateOfBirth);
-		image.setImageResource(_contact.getImageId());
-		name.setText(_contact.getFullName());
-		mobile.setText(_contact.getMobilePhone());
-		home.setText(_contact.getHomePhone());
-		work.setText(_contact.getWorkPhone());
-		email.setText(_contact.getEmail());
-		address.setText(_contact.getAddress());
-		dob.setText(_contact.getDOB());
+		_image.setImageResource(_contact.getImageId());
+		_name.setText(_contact.getFullName());
+		_mobile.setText(_contact.getMobilePhone());
+		_home.setText(_contact.getHomePhone());
+		_work.setText(_contact.getWorkPhone());
+		_email.setText(_contact.getEmail());
+		_address.setText(_contact.getAddress());
+		_dob.setText(_contact.getDOB());
+	}
+	
+	/**
+	 * Sets up the views, assigning them to fields.
+	 */
+	private void initialiseViews() {
+		_image = (ImageView) findViewById(R.id.image);
+		_name = (TextView) findViewById(R.id.fullName);
+		_mobile = (TextView) findViewById(R.id.mobilePhone);
+		_home = (TextView) findViewById(R.id.homePhone);
+		_work = (TextView) findViewById(R.id.workPhone);
+		_email = (TextView) findViewById(R.id.emailAddress);
+		_address = (TextView) findViewById(R.id.homeAddress);
+		_dob = (TextView) findViewById(R.id.dateOfBirth);
 	}
 
 }
