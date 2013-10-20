@@ -2,6 +2,11 @@ package com.example.contactmanager;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,6 +48,7 @@ public class ContactView extends Activity {
 				_id, null);
 		cursor.moveToFirst();
 		_contact = ContactList.cursorToContact(cursor);
+		_contact.setID(_id);
 		setViews();
 		initialiseActionBar();
 
@@ -65,6 +71,7 @@ public class ContactView extends Activity {
 	 * selected.
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
+		final ContactList ls = new ContactList(this);
 		switch (item.getItemId()) {
 		case R.id.action_edit:
 			Intent toEdit = new Intent(ContactView.this, EditContactView.class);
@@ -72,6 +79,31 @@ public class ContactView extends Activity {
 			startActivity(toEdit);
 			return true;
 		case R.id.action_delete:
+			class DeletePrompt extends DialogFragment {
+
+				protected DeletePrompt() {
+					super();
+				}
+
+				@Override
+				public Dialog onCreateDialog(Bundle savedInstanceState) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setMessage(R.string.delete_prompt)
+						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								ls.deleteContact(_contact);
+								getActivity().finish();					
+							}
+						}).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// Can I just leave this blank?
+							}
+						});
+					return builder.create();
+				}
+			};
 			DeletePrompt dialogue = new DeletePrompt();
 			dialogue.show(getFragmentManager(), "dialogue");
 			return true;

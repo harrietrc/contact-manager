@@ -7,6 +7,7 @@ import android.app.ActionBar;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +19,9 @@ import android.widget.ListView;
 public class MainActivity extends ListActivity {
 
 	private ListView _listView;
-	private List<Contact> _list;
 	private ContactListAdapter _adapter;
 	private ContactList _dm;
+	private Cursor _cursor;
 
 	/**
 	 * Initialises the action bar with a spinner for sorting.
@@ -61,7 +62,6 @@ public class MainActivity extends ListActivity {
 
 		// Set up the layout and content
 		setContentView(R.layout.activity_main);
-		_list = _dm.getAllContacts();
 		_listView = (ListView) findViewById(android.R.id.list);
 		
 		// A listener for listening to the user clicking the list items.
@@ -76,11 +76,12 @@ public class MainActivity extends ListActivity {
 			}
 		});
 		
-		_adapter = new ContactListAdapter(this, _dm.getAllData());
+		_cursor = _dm.getAllData();
+		_adapter = new ContactListAdapter(this, _cursor);
 		_listView.setAdapter(_adapter);
 		
-		//mock();
-		//_adapter.getCursor().requery(); // this works, but may be bad design?
+		mock();
+		_adapter.getCursor().requery(); // this works, but may be bad design?
 	}
 
 	public void mock() {
@@ -115,8 +116,17 @@ public class MainActivity extends ListActivity {
 		}
 	}
 	
+	/**
+	 * Data in the ListView is refreshed when the activity is resumed.
+	 */
 	protected void onResume() {
 		_dm.open();
+		
+		// This is the only method of refreshing that I could get to work. 
+		// It seems to be a relatively common method.
+		_cursor = _dm.getAllData();
+		_adapter.swapCursor(_cursor);
+		
 		super.onResume();
 	}
 	

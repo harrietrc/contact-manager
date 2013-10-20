@@ -77,9 +77,11 @@ public class ContactList {
 	 * @param contact = The contact to be deleted.
 	 */
 	public void deleteContact(Contact contact) {
+		open();
 		long id = contact.getId();
-		_db.delete(DatabaseHelper.TABLE_NAME, DatabaseHelper.COL_ID + " = " + id,
-				null);
+		_db.delete(DatabaseHelper.TABLE_NAME, "_id = ?", 
+				new String[]{Long.toString(id)});
+		close();
 	}
 	
 	/**
@@ -108,6 +110,8 @@ public class ContactList {
 	
 	/**
 	 * Converts a cursor into a contact object.
+	 * I think I can justify it being static because calling it makes
+	 * sense even when no contact list exists.
 	 * @param cursor = the cursor to be converted
 	 * @return = a Contact object
 	 */
