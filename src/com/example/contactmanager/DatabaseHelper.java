@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			" TEXT NOT NULL DEFAULT ''," + COL_ADDRESS +
 			" TEXT NOT NULL DEFAULT ''," + COL_DOB +
 			" TEXT NOT NULL DEFAULT ''," + COL_IMAGE
-			+ " TEXT NOT NULL DEFAULT '')";
+			+ " BLOB)";
 	
 	
 	private SQLiteDatabase _db;

@@ -31,7 +31,7 @@ class ContactListAdapter extends CursorAdapter {
 		// Populate the row with data
 		name.setText(contact.getFullName());
 		number.setText(contact.getPrimaryNumber());
-		// image.setImageResource(c.getImageId());
+		image.setImageBitmap(contact.getImage());
 	}
 	
 	/**

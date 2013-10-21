@@ -29,6 +29,7 @@
 
     <ImageView
         android:id="@+id/contactImage"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/contact_image_description"
         android:layout_width="75dp"
         android:layout_height="75dp"

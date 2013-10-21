@@ -1,5 +1,11 @@
 package com.example.contactmanager;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 public class Contact {
 
 	private String _firstName;
@@ -10,6 +16,7 @@ public class Contact {
 	private String _address;
 	private String _dob;
 	private String _email;
+	private byte[] _image;
 	private long _id;
 
 	
@@ -119,12 +126,14 @@ public class Contact {
 	}
 
 	/**
-	 * Returns the contact's picture if it exists.
-	 * 
-	 * @return = the ID of the contact's picture.
+	 * Returns the contact's picture if it exists, converting
+	 * a byte array to a bitmap array.
+	 * @return = a bitmap array representing the image.
 	 */
-	public int getImageId() {
-		return R.drawable.man;
+	public Bitmap getImage() {
+		InputStream inp = new ByteArrayInputStream(_image);
+		Bitmap bmp = BitmapFactory.decodeStream(inp);
+		return bmp;
 	}
 	
 	public long getId() {
@@ -169,8 +178,8 @@ public class Contact {
 		_email = email;
 	}
 
-	public void setImageId(String id) {
-		//
+	public void setImage(byte[] image) {
+		_image = image;
 	}
 
 }

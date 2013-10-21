@@ -85,7 +85,7 @@ public class ContactList {
 	 * Create a contact and add it to the database.
 	 */
 	public Contact createContact(String fName, String lName, String hPhone, String wPhone,
-			String mPhone, String address, String email, String dob) {
+			String mPhone, String address, String email, String dob, byte[] image) {
 		open();
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.COL_FIRSTNAME, fName);
@@ -96,7 +96,7 @@ public class ContactList {
 		values.put(DatabaseHelper.COL_EMAIL, email);
 		values.put(DatabaseHelper.COL_ADDRESS, address);
 		values.put(DatabaseHelper.COL_DOB, dob);
-		//values.put(_dbHelper.COL_IMAGE, image);
+		values.put(DatabaseHelper.COL_IMAGE, image);
 		long insertID = _db.insert(DatabaseHelper.TABLE_NAME, null, values);
 		values.put(DatabaseHelper.COL_ID, insertID);
 		Cursor cursor = _db.query(DatabaseHelper.TABLE_NAME, _cols,
@@ -112,7 +112,7 @@ public class ContactList {
 	 * @return = new blank contact.
 	 */
 	public Contact newContact() {
-		return createContact("","","","","","","", "");
+		return createContact("","","","","","","", "",null);
 	}
 	
 	/**
@@ -120,7 +120,7 @@ public class ContactList {
 	 */
 	public void editContact(long id, String fName, String lName,
 			String email, String hPhone, String mPhone, String wPhone,
-			String dob, String image, String address) {
+			String dob, byte[] image, String address) {
 		open();
 		final ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.COL_ID, id);
@@ -132,7 +132,7 @@ public class ContactList {
 		values.put(DatabaseHelper.COL_EMAIL, email);
 		values.put(DatabaseHelper.COL_ADDRESS, address);
 		values.put(DatabaseHelper.COL_DOB, dob);
-		//values.put(DatabaseHelper.COL_IMAGE, image);
+		values.put(DatabaseHelper.COL_IMAGE, image);
 		_db.update(DatabaseHelper.TABLE_NAME, values, DatabaseHelper.COL_ID + "=" + id, null);
 		close();
 	}
@@ -178,7 +178,7 @@ public class ContactList {
 		contact.setEmail(cursor.getString(6));
 		contact.setAddress(cursor.getString(7));
 		contact.setDOB(cursor.getString(8));
-		//contact.setImageId(null);
+		contact.setImage(cursor.getBlob(9));
 		return contact;
 	}
 	

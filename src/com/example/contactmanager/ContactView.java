@@ -150,7 +150,7 @@ public class ContactView extends Activity {
 	 * Sets the text in each of the text and image views.
 	 */
 	private void setViews() {
-		_image.setImageResource(_contact.getImageId());
+		_image.setImageBitmap(_contact.getImage());
 		_name.setText(_contact.getFullName());
 		_mobile.setText(_contact.getMobilePhone());
 		_home.setText(_contact.getHomePhone());

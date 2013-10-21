@@ -1,5 +1,7 @@
 package com.example.contactmanager;
 
+import java.io.ByteArrayOutputStream;
+
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.ActionBar;
@@ -8,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -23,6 +26,8 @@ public class EditContactView extends Activity {
 	private InputMethodManager _imm;
 	private long _id;
 	private String _activity;  // either 'add' or 'edit'
+	private static final int CAMERA_REQUEST = 1888;
+	private byte[] _image = null;
 	
 	private ImageView image;
 	private EditText first;
@@ -93,7 +98,7 @@ public class EditContactView extends Activity {
      */
     private void setFields() {
             image = (ImageView) findViewById(R.id.image);
-            image.setImageResource(_contact.getImageId());
+            image.setImageBitmap(_contact.getImage());
             first = (EditText)findViewById(R.id.editFirstName);
             first.setText(_contact.getFirstName(), TextView.BufferType.EDITABLE);
             last = (EditText)findViewById(R.id.editLastName);
@@ -174,18 +179,31 @@ public class EditContactView extends Activity {
 		String m = mobile.getText().toString();
 		String a = address.getText().toString();
 		String d = dob.getText().toString();
-		//String i = image.getText().toString();
-		ls.editContact(_id, f, l, e, h, m, w, d, null, a);
+		ls.editContact(_id, f, l, e, h, m, w, d, _image, a);
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == CAMERA_REQUEST) {
+			Bitmap photo = (Bitmap) data.getExtras().get("data");
+			image.setImageBitmap(photo);
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			_image = stream.toByteArray();
+		}
 	}
 
-	/* Methods that deal with clicks. Not the best way to do this, so I may rejig it if I find a better way. 
-	 * These are all a bit buggy in that if you open two fields and then close one the keyboard will be hidden.
-	 * The basic functionality is there, at least. */
+	/* Methods that deal with clicks. Should refactor by creating a generator to aid maintenance. */
 	
+	/**
+	 * Starts the camera app when the ImageView is clicked.
+	 * @param v = the ImageView
+	 */
 	public void imageClicked(View v) {
-		// blank for now. Not sure how the 'choose image' dialogue is going to work, or how images in general
-		// will work.
+		Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(cameraIntent, CAMERA_REQUEST);
 	}
+	
+	//protected void
 	
 	/**
 	 * Identifies whether the corresponding textbox to the first name heading is visible and either shows or hides
