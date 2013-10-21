@@ -6,86 +6,91 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * Class representing the contact list data model. Contains operations for adding, deleting,
- * and modifying contacts. Very dependent on DatabaseHelper, which establishes and manages the
- * database.
+ * Class representing the contact list data model. Contains operations for
+ * adding, deleting, and modifying contacts. Very dependent on DatabaseHelper,
+ * which establishes and manages the database.
+ * 
  * @author hrob748
  */
 public class ContactList {
-	
+
 	// Database data
 	private SQLiteDatabase _db;
 	private static DatabaseHelper _dbHelper;
-	private String[] _cols = new String[] {
-			DatabaseHelper.COL_ID, DatabaseHelper.COL_FIRSTNAME, DatabaseHelper.COL_LASTNAME, DatabaseHelper.COL_HOMEPHONE,
-			DatabaseHelper.COL_WORKPHONE, DatabaseHelper.COL_MOBILEPHONE, DatabaseHelper.COL_EMAIL, DatabaseHelper.COL_ADDRESS,
-			DatabaseHelper.COL_DOB
-	};
-	
+	private String[] _cols = new String[] { DatabaseHelper.COL_ID,
+			DatabaseHelper.COL_FIRSTNAME, DatabaseHelper.COL_LASTNAME,
+			DatabaseHelper.COL_HOMEPHONE, DatabaseHelper.COL_WORKPHONE,
+			DatabaseHelper.COL_MOBILEPHONE, DatabaseHelper.COL_EMAIL,
+			DatabaseHelper.COL_ADDRESS, DatabaseHelper.COL_DOB,
+			DatabaseHelper.COL_IMAGE };
+
 	public ContactList(Context context) {
 		_dbHelper = new DatabaseHelper(context);
 	}
-	
+
 	/**
 	 * Open the database.
 	 */
 	public void open() {
 		_db = _dbHelper.getWritableDatabase();
 	}
-	
+
 	/**
-	 * Returns a cursor over the contacts matching a search term. Not case sensitive,
-	 * and will match names that begin with the search term. Matches first + last name
-	 * (concatenated together
-	 * @param term = the search term
+	 * Returns a cursor over the contacts matching a search term. Not case
+	 * sensitive, and will match names that begin with the search term. Matches
+	 * first + last name (concatenated together
+	 * 
+	 * @param term
+	 *            = the search term
 	 * @return = cursor with matching contacts
 	 */
 	public Cursor getMatch(String term) {
 		String query = "SELECT * FROM " + DatabaseHelper.TABLE_NAME;
-		
+
 		if (term.length() != 0) {
-			query += " WHERE upper(firstName)||' '||upper(lastName) LIKE upper(" + "'" + term + "%')";
-		} 
+			query += " WHERE upper(firstName)||' '||upper(lastName) LIKE upper("
+					+ "'" + term + "%')";
+		}
 		Cursor cursor = _db.rawQuery(query, null);
-		
+
 		if (cursor != null) {
 			cursor.moveToFirst();
 			return cursor;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Gets a contact by its corresponding ID.
-	 * @param id = the ID of the required contact.
+	 * 
+	 * @param id
+	 *            = the ID of the required contact.
 	 * @return = a Contact object corresponding to the ID.
 	 */
-	public static Contact getContactByID(long id) {
+	public Contact getContactByID(long id) {
 		SQLiteDatabase db = _dbHelper.getWritableDatabase();
-		Cursor cursor = db
-				.rawQuery(
-						"SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE _id = " +
-				id, null);
+		Cursor cursor = db.rawQuery("SELECT * FROM "
+				+ DatabaseHelper.TABLE_NAME + " WHERE _id = " + id, null);
 		cursor.moveToFirst();
 		Contact contact = ContactList.cursorToContact(cursor);
 		contact.setID(id);
 		return contact;
 	}
-	
+
 	/**
 	 * Close the database.
 	 */
 	public void close() {
 		_dbHelper.close();
 	}
-	
-	
+
 	/**
 	 * Create a contact and add it to the database.
 	 */
-	public Contact createContact(String fName, String lName, String hPhone, String wPhone,
-			String mPhone, String address, String email, String dob, byte[] image) {
+	public Contact createContact(String fName, String lName, String hPhone,
+			String wPhone, String mPhone, String address, String email,
+			String dob, byte[] image) {
 		open();
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.COL_FIRSTNAME, fName);
@@ -100,27 +105,29 @@ public class ContactList {
 		long insertID = _db.insert(DatabaseHelper.TABLE_NAME, null, values);
 		values.put(DatabaseHelper.COL_ID, insertID);
 		Cursor cursor = _db.query(DatabaseHelper.TABLE_NAME, _cols,
-				DatabaseHelper.COL_ID + " = " + insertID, null, null, null, null);
+				DatabaseHelper.COL_ID + " = " + insertID, null, null, null,
+				null);
 		cursor.moveToFirst();
 		Contact newContact = cursorToContact(cursor);
 		close();
 		return newContact;
 	}
-	
+
 	/**
 	 * Creates a new contact and initialises its fields to empty strings.
+	 * 
 	 * @return = new blank contact.
 	 */
 	public Contact newContact() {
-		return createContact("","","","","","","", "",null);
+		return createContact("", "", "", "", "", "", "", "", null);
 	}
-	
+
 	/**
 	 * Edits the values of a contact.
 	 */
-	public void editContact(long id, String fName, String lName,
-			String email, String hPhone, String mPhone, String wPhone,
-			String dob, byte[] image, String address) {
+	public void editContact(long id, String fName, String lName, String email,
+			String hPhone, String mPhone, String wPhone, String dob,
+			byte[] image, String address) {
 		open();
 		final ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.COL_ID, id);
@@ -133,38 +140,59 @@ public class ContactList {
 		values.put(DatabaseHelper.COL_ADDRESS, address);
 		values.put(DatabaseHelper.COL_DOB, dob);
 		values.put(DatabaseHelper.COL_IMAGE, image);
-		_db.update(DatabaseHelper.TABLE_NAME, values, DatabaseHelper.COL_ID + "=" + id, null);
+		_db.update(DatabaseHelper.TABLE_NAME, values, DatabaseHelper.COL_ID
+				+ "=" + id, null);
 		close();
 	}
-	
-	/** 
+
+	/**
 	 * Deletes a contact from the database.
-	 * @param contact = The contact to be deleted.
+	 * 
+	 * @param contact
+	 *            = The contact to be deleted.
 	 */
 	public void deleteContact(Contact contact) {
 		open();
 		long id = contact.getId();
-		_db.delete(DatabaseHelper.TABLE_NAME, "_id = ?", 
-				new String[]{Long.toString(id)});
+		_db.delete(DatabaseHelper.TABLE_NAME, "_id = ?",
+				new String[] { Long.toString(id) });
 		close();
 	}
-	
-	
+
 	/**
-	 * Gets all the data in the database as a cursor. Sort order can be specified using the column name to be sorted by.
-	 * @param sortOrder = the DatabaseHelper column name to be sorted by.
+	 * Given a contact ID, deletes a contact from the database that matches that
+	 * ID.
+	 * 
+	 * @param id
+	 *            = the ID of the contact.
+	 */
+	public void deleteContactByID(long id) {
+		open();
+		_db.delete(DatabaseHelper.TABLE_NAME, "_id = ?",
+				new String[] { Long.toString(id) });
+		close();
+	}
+
+	/**
+	 * Gets all the data in the database as a cursor. Sort order can be
+	 * specified using the column name to be sorted by.
+	 * 
+	 * @param sortOrder
+	 *            = the DatabaseHelper column name to be sorted by.
 	 * @return
 	 */
 	public Cursor getAllData(String sortOrder) {
-		String buildSQL = "SELECT * FROM " + DatabaseHelper.TABLE_NAME + " " + sortOrder;
+		String buildSQL = "SELECT * FROM " + DatabaseHelper.TABLE_NAME + " "
+				+ sortOrder;
 		return _db.rawQuery(buildSQL, null);
 	}
-	
+
 	/**
-	 * Converts a cursor into a contact object.
-	 * I think I can justify it being static because calling it makes
-	 * sense even when no contact list exists.
-	 * @param cursor = the cursor to be converted
+	 * Converts a cursor into a contact object. I think I can justify it being
+	 * static because calling it makes sense even when no contact list exists.
+	 * 
+	 * @param cursor
+	 *            = the cursor to be converted
 	 * @return = a Contact object
 	 */
 	public static Contact cursorToContact(Cursor cursor) {
@@ -181,6 +209,5 @@ public class ContactList {
 		contact.setImage(cursor.getBlob(9));
 		return contact;
 	}
-	
-}
 
+}

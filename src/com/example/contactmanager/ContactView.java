@@ -22,9 +22,9 @@ public class ContactView extends Activity {
 	private Contact _contact;
 	private long _id;
 	private ContactList _ls;
-	
+
 	/* Views */
-	
+
 	private ImageView _image;
 	private TextView _name;
 	private TextView _mobile;
@@ -37,9 +37,9 @@ public class ContactView extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// No more annoying transition animation
-		overridePendingTransition(0,0);
+		overridePendingTransition(0, 0);
 
 		// Set up layout
 		setContentView(R.layout.contact_view);
@@ -47,28 +47,42 @@ public class ContactView extends Activity {
 		// Get ID of contact
 		Intent intent = getIntent();
 		_id = intent.getLongExtra("contactID", 0);
-		
+
+		// If the ID is 0, the contact was blank and has been deleted. Return to
+		// the list view.
+		if (_id == -1) {
+			System.out.println("yes");
+			finish();
+			return; // Else onCreate() keeps executing
+		}
+
 		// Set the contact
 		_ls = new ContactList(this);
 		_contact = _ls.getContactByID(_id);
-		
+
 		// Set up the views
 		initialiseViews();
 		setViews();
-		
+
 		// Set up the action bar
 		initialiseActionBar();
 
 	}
-	
 
-	
+	/**
+	 * Due to my decision to call finish() when starting EditContactView, I
+	 * don't believe this is ever called. I've left the implementation anyway
+	 * because this is (more or less) the expected behaviour.
+	 */
 	protected void onResume() {
-		
+
 		// Gets rid of transition animation
-		overridePendingTransition(0,0);
-		
+		overridePendingTransition(0, 0);
+
+		// Set contact by ID
 		_contact = _ls.getContactByID(_id);
+
+		// Set up layout and variables
 		setViews();
 		super.onResume();
 	}
@@ -99,6 +113,11 @@ public class ContactView extends Activity {
 			extra.putString("activity", "edit");
 			toEdit.putExtras(extra);
 			startActivity(toEdit);
+			/*
+			 * finish() is called so that onCreate() is able to handle intents
+			 * should a contact need to be removed due to having blank fields.
+			 */
+			finish();
 			return true;
 		case R.id.action_delete:
 			class DeletePrompt extends DialogFragment {
@@ -109,28 +128,35 @@ public class ContactView extends Activity {
 
 				@Override
 				public Dialog onCreateDialog(Bundle savedInstanceState) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
 					builder.setMessage(R.string.delete_prompt)
-						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								ls.deleteContact(_contact);
-								getActivity().finish();					
-							}
-						}).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-							}
-						});
+							.setPositiveButton(R.string.yes,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											ls.deleteContact(_contact);
+											getActivity().finish();
+										}
+									})
+							.setNegativeButton(R.string.no,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+										}
+									});
 					return builder.create();
 				}
-			};
+			}
+			;
 			DeletePrompt dialogue = new DeletePrompt();
 			dialogue.show(getFragmentManager(), "dialogue");
 			return true;
 		case android.R.id.home:
-			// Should return the user to the same place in the main list that
-			// they were at before.
 			finish();
 			return true;
 		default:
@@ -161,7 +187,7 @@ public class ContactView extends Activity {
 		_address.setText(_contact.getAddress());
 		_dob.setText(_contact.getDOB());
 	}
-	
+
 	/**
 	 * Sets up the views, assigning them to fields.
 	 */

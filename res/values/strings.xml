@@ -7,12 +7,12 @@
     <string name="action_add">Add contact</string>
     <string name="action_search">Search contacts</string>
     <string name="action_sort">Sort</string>
-    <string name="all_contacts">All Contacts</string>
+    <string name="all_contacts">CONTACTS</string>
 
     <string-array name="sort_options">
-        <item>First name</item>
-        <item>Last name</item>
-        <item>Number</item>
+        <item>FIRST NAME</item>
+        <item>LAST NAME</item>
+        <item>NUMBER</item>
     </string-array>
 
     <string name="mobile_phone">MOBILE PHONE</string>

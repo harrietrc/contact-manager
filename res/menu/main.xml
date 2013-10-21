@@ -9,9 +9,5 @@
           android:icon="@drawable/search"
           android:showAsAction="collapseActionView|ifRoom"
           android:actionViewClass="android.widget.SearchView" />
-   <item android:id="@+id/action_sort"
-        android:title="@string/action_sort"
-        android:icon="@drawable/down"
-        android:showAsAction="always" />
 
 </menu>

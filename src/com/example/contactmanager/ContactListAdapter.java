@@ -20,32 +20,30 @@ class ContactListAdapter extends CursorAdapter {
 	 */
 	public void bindView(View view, Context context, Cursor cursor) {
 
-		//_activity.setContentView(R.layout.activity_main);
-		
 		// Get the relevant views
 		ImageView image = (ImageView) view.findViewById(R.id.contactImage);
 		TextView name = (TextView) view.findViewById(R.id.contactName);
 		TextView number = (TextView) view.findViewById(R.id.contactNumber);
-		
+
 		// Change cursor to contact
 		Contact contact = ContactList.cursorToContact(cursor);
-		
+
 		// Populate the row with data
 		name.setText(contact.getFullName());
 		number.setText(contact.getPrimaryNumber());
 		image.setImageBitmap(contact.getImage());
-		
+
 	}
-	
+
 	/**
 	 * Method for inflating a row item view for the list of contacts.
 	 */
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View listItemView = inflater.inflate(R.layout.list_item, null);
 		return listItemView;
 	}
-
 
 }

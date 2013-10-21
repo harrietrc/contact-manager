@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String COL_EMAIL = "email";
 	public static final String COL_ADDRESS = "address";
 	public static final String COL_DOB = "dob";
-	public static final String COL_IMAGE = "imagePath";
+	public static final String COL_IMAGE = "image";
 	
 	public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + 
 			"(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_FIRSTNAME + 
@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private SQLiteDatabase _db;
 	
 	public static final String[] FIELDS = {COL_ID, COL_FIRSTNAME, COL_LASTNAME,
-		COL_HOMEPHONE, COL_WORKPHONE, COL_MOBILEPHONE, COL_ADDRESS, COL_DOB};
+		COL_HOMEPHONE, COL_WORKPHONE, COL_MOBILEPHONE, COL_ADDRESS, COL_DOB, COL_IMAGE};
 	
 	public DatabaseHelper(Context context) {
 		super(context, TABLE_NAME, null, DB_VERSION);

@@ -19,15 +19,11 @@ public class Contact {
 	private byte[] _image;
 	private long _id;
 
-	
-	// There will also be an image field, but I'm not really sure how images
-	// are going to be set up for this project.
-
 	/**
 	 * Blank for now. Obviously won't be later.
 	 */
 	public Contact() {
-
+		_image = null;
 	}
 
 	/* GETTERS */
@@ -53,6 +49,7 @@ public class Contact {
 
 	/**
 	 * Returns the contact's first name.
+	 * 
 	 * @return = first name
 	 */
 	public String getFirstName() {
@@ -71,6 +68,7 @@ public class Contact {
 	/**
 	 * Returns the contact's work phone. May implement automatic formatting
 	 * later.
+	 * 
 	 * @return = work phone number as a string
 	 */
 	public String getWorkPhone() {
@@ -79,6 +77,7 @@ public class Contact {
 
 	/**
 	 * Returns the contact's home phone number.
+	 * 
 	 * @return = home phone number as a string
 	 */
 	public String getHomePhone() {
@@ -87,6 +86,7 @@ public class Contact {
 
 	/**
 	 * Returns the contact's mobile phone number.
+	 * 
 	 * @return = mobile phone number as a string
 	 */
 	public String getMobilePhone() {
@@ -95,6 +95,7 @@ public class Contact {
 
 	/**
 	 * Returns the contact's full name. Here for convenience.
+	 * 
 	 * @return = the contact's first and last names if they exist.
 	 */
 	public String getFullName() {
@@ -103,6 +104,7 @@ public class Contact {
 
 	/**
 	 * Returns the contact's email address.
+	 * 
 	 * @return = the email address as a string.
 	 */
 	public String getEmail() {
@@ -111,8 +113,8 @@ public class Contact {
 
 	/**
 	 * Returns the 'primary' number (home or mobile - mobile will take
-	 * precedence)
-	 * It would be good if the user could set this.
+	 * precedence) It would be good if the user could set this.
+	 * 
 	 * @return = the contact's primary number.
 	 */
 	public String getPrimaryNumber() {
@@ -126,20 +128,25 @@ public class Contact {
 	}
 
 	/**
-	 * Returns the contact's picture if it exists, converting
-	 * a byte array to a bitmap array.
+	 * Returns the contact's picture if it exists, converting a byte array to a
+	 * bitmap array.
+	 * 
 	 * @return = a bitmap array representing the image.
 	 */
 	public Bitmap getImage() {
-		InputStream inp = new ByteArrayInputStream(_image);
-		Bitmap bmp = BitmapFactory.decodeStream(inp);
-		return bmp;
+		if (_image != null) {
+			InputStream inp = new ByteArrayInputStream(_image);
+			Bitmap bmp = BitmapFactory.decodeStream(inp);
+			return bmp;
+		} else {
+			return null;
+		}
 	}
-	
+
 	public byte[] getImageByte() {
 		return _image;
 	}
-	
+
 	public long getId() {
 		return _id;
 	}
