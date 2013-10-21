@@ -7,7 +7,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,6 +65,9 @@ public class MainActivity extends ListActivity implements ActionBar.OnNavigation
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Removes transition animation
+		overridePendingTransition(0,0);
 		
 		_sortOrder = DEFAULT_SORT_ORDER;
 
@@ -160,6 +162,9 @@ public class MainActivity extends ListActivity implements ActionBar.OnNavigation
 	 * Data in the ListView is refreshed when the activity is resumed.
 	 */
 	protected void onResume() {
+		// No more transition animation
+		overridePendingTransition(0,0);
+		
 		_dm.open();
 		
 		// This is the only method of refreshing that I could get to work. 

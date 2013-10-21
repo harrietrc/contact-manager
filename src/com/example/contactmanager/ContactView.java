@@ -36,6 +36,9 @@ public class ContactView extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// No more annoying transition animation
+		overridePendingTransition(0,0);
 
 		// Set up layout
 		setContentView(R.layout.contact_view);
@@ -59,6 +62,10 @@ public class ContactView extends Activity {
 
 	
 	protected void onResume() {
+		
+		// Gets rid of transition animation
+		overridePendingTransition(0,0);
+		
 		_contact = ContactList.getContactByID(_id);
 		setViews();
 		super.onResume();

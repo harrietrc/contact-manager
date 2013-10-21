@@ -39,6 +39,8 @@ public class EditContactView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_contact);
 		
+		overridePendingTransition(0,0);
+		
 		// Sets up the keyboard
 		_imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		
