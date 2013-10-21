@@ -15,7 +15,7 @@
         android:textSize="20sp"
         android:paddingBottom="5dp"
         android:layout_alignParentTop="true" />
-
+    
     <TextView
         android:id="@+id/contactNumber"
         android:layout_width="wrap_content"
@@ -26,13 +26,20 @@
         android:layout_alignParentLeft="true"
         android:textColor="#787878"
         android:paddingLeft="12dp" />
+    
+    <View
+	    android:layout_height="90dp"
+	    android:layout_width="1dp"
+	    android:layout_toLeftOf="@+id/contactImage"
+	    android:background="#D6D6D6"/>
 
     <ImageView
         android:id="@+id/contactImage"
         android:scaleType="centerCrop"
+        android:background="#EDEDED"
         android:contentDescription="@string/contact_image_description"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"/>
 

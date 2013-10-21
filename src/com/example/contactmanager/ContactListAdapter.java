@@ -20,6 +20,8 @@ class ContactListAdapter extends CursorAdapter {
 	 */
 	public void bindView(View view, Context context, Cursor cursor) {
 
+		//_activity.setContentView(R.layout.activity_main);
+		
 		// Get the relevant views
 		ImageView image = (ImageView) view.findViewById(R.id.contactImage);
 		TextView name = (TextView) view.findViewById(R.id.contactName);
@@ -32,6 +34,7 @@ class ContactListAdapter extends CursorAdapter {
 		name.setText(contact.getFullName());
 		number.setText(contact.getPrimaryNumber());
 		image.setImageBitmap(contact.getImage());
+		
 	}
 	
 	/**

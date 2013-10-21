@@ -24,6 +24,7 @@
 		        android:contentDescription="@string/contact_image_description"
 		        android:onClick="imageClicked"
 		        android:id="@+id/image"
+		        android:background="#D6D6D6"
 		        android:layout_width="90dp"
 		        android:scaleType="centerCrop"
 		        android:layout_height="90dp"
