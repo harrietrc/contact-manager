@@ -65,6 +65,7 @@ public class EditContactView extends Activity {
 				_id, null);
 		cursor.moveToFirst();
 		_contact = ContactList.cursorToContact(cursor);
+		_image = _contact.getImageByte();
 		
 		// Set up the views and action bar
 		_activity = extra.getString("activity", "edit");
@@ -158,7 +159,6 @@ public class EditContactView extends Activity {
 			finish();
 			return true;
 		case android.R.id.home: // I.e. cancel (I'm using the home button for convenience)
-			// do other stuff
 			finish();
 			return true;
 		default:

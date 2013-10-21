@@ -21,6 +21,7 @@ public class ContactView extends Activity {
 
 	private Contact _contact;
 	private long _id;
+	private ContactList _ls;
 	
 	/* Views */
 	
@@ -48,7 +49,8 @@ public class ContactView extends Activity {
 		_id = intent.getLongExtra("contactID", 0);
 		
 		// Set the contact
-		_contact = ContactList.getContactByID(_id);
+		_ls = new ContactList(this);
+		_contact = _ls.getContactByID(_id);
 		
 		// Set up the views
 		initialiseViews();
@@ -66,7 +68,7 @@ public class ContactView extends Activity {
 		// Gets rid of transition animation
 		overridePendingTransition(0,0);
 		
-		_contact = ContactList.getContactByID(_id);
+		_contact = _ls.getContactByID(_id);
 		setViews();
 		super.onResume();
 	}

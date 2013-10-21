@@ -136,6 +136,10 @@ public class Contact {
 		return bmp;
 	}
 	
+	public byte[] getImageByte() {
+		return _image;
+	}
+	
 	public long getId() {
 		return _id;
 	}

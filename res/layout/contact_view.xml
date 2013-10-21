@@ -35,7 +35,6 @@
 			    android:background="#000000"/>
 		    <ImageView
 		        android:id="@+id/image"
-		        android:paddingTop="2dp"
 		        android:scaleType="centerCrop"
 		        android:background="#D6D6D6"
 		        android:contentDescription="@string/contact_image_description"
