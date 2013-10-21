@@ -4,10 +4,11 @@
         android:title="@string/action_add"
         android:icon="@drawable/plus"
         android:showAsAction="always" />
-   <item android:id="@+id/action_search"
-        android:icon="@drawable/search"
-        android:title="@string/action_search"
-        android:showAsAction="always" />
+    <item android:id="@+id/search"
+          android:title="@string/action_search"
+          android:icon="@drawable/search"
+          android:showAsAction="collapseActionView|ifRoom"
+          android:actionViewClass="android.widget.SearchView" />
    <item android:id="@+id/action_sort"
         android:title="@string/action_sort"
         android:icon="@drawable/down"

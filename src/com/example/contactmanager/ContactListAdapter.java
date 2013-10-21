@@ -31,13 +31,12 @@ class ContactListAdapter extends CursorAdapter {
 		// Populate the row with data
 		name.setText(contact.getFullName());
 		number.setText(contact.getPrimaryNumber());
-//		name.setText(cursor.getString(cursor.getColumnIndex(cursor
-//				.getColumnName(2))));
-//		number.setText(cursor.getString(cursor.getColumnIndex(cursor
-//				.getColumnName(3))));
 		// image.setImageResource(c.getImageId());
 	}
 	
+	/**
+	 * Method for inflating a row item view for the list of contacts.
+	 */
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

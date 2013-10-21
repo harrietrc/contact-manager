@@ -21,7 +21,6 @@ public class EditContactView extends Activity {
 	
 	private Contact _contact;
 	private InputMethodManager _imm;
-	private boolean _fieldExpandedFlag;
 	private long _id;
 	private String _activity;  // either 'add' or 'edit'
 	
@@ -39,9 +38,6 @@ public class EditContactView extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_contact);
-		
-		// Set the flag that indicates whether an EditText view is open to false
-		_fieldExpandedFlag = false;
 		
 		// Sets up the keyboard
 		_imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -196,7 +192,7 @@ public class EditContactView extends Activity {
 	 */
 	public void firstNameClicked(View v) {
 		View box = findViewById(R.id.editFirstName);	
-		if (box.getVisibility() != View.VISIBLE) {
+		if (box.getVisibility() != View.VISIBLE) { // EditText is invisible. Expand it.
 			findViewById(R.id.editFirstName).setVisibility(View.VISIBLE);
 			_imm.showSoftInput(box, 0); // This line isn't really necessary because of the next 2, but I left it in just to be safe.
 			
@@ -204,9 +200,10 @@ public class EditContactView extends Activity {
 			// sure why this is, but others have had the same problem switching from GONE to VISIBLE.
 			box.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN , 0, 0, 0));
             box.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP , 0, 0, 0)); 
-		} else {
+		} else { // Collapse the EditText
 			findViewById(R.id.editFirstName).setVisibility(View.GONE);
 			_imm.hideSoftInputFromWindow(box.getWindowToken(), 0);
+			((TextView) findViewById(R.id.firstName2)).setText(first.getText().toString());
 		}
 	}
 		
@@ -225,6 +222,7 @@ public class EditContactView extends Activity {
 		} else {
 			findViewById(R.id.editLastName).setVisibility(View.GONE);
 			_imm.hideSoftInputFromWindow(box.getWindowToken(), 0);
+			((TextView) findViewById(R.id.lastName2)).setText(last.getText().toString());
 		}
 	}
 	
@@ -243,6 +241,7 @@ public class EditContactView extends Activity {
 		} else {
 			findViewById(R.id.editMobilePhone).setVisibility(View.GONE);
 			_imm.hideSoftInputFromWindow(box.getWindowToken(), 0);
+			((TextView) findViewById(R.id.mobilePhone2)).setText(mobile.getText().toString());
 		}
 	}
 	
@@ -261,6 +260,7 @@ public class EditContactView extends Activity {
 		} else {
 			findViewById(R.id.editHomePhone).setVisibility(View.GONE);
 			_imm.hideSoftInputFromWindow(box.getWindowToken(), 0);
+			((TextView) findViewById(R.id.homePhone2)).setText(home.getText().toString());
 		}
 	}
 	
@@ -279,6 +279,7 @@ public class EditContactView extends Activity {
 		} else {
 			findViewById(R.id.editWorkPhone).setVisibility(View.GONE);
 			_imm.hideSoftInputFromWindow(box.getWindowToken(), 0);
+			((TextView) findViewById(R.id.workPhone2)).setText(work.getText().toString());
 		}
 	}
 	
@@ -297,6 +298,7 @@ public class EditContactView extends Activity {
 		} else {
 			findViewById(R.id.editEmail).setVisibility(View.GONE);
 			_imm.hideSoftInputFromWindow(box.getWindowToken(), 0);
+			((TextView) findViewById(R.id.email2)).setText(email.getText().toString());
 		}
 	}
 	
@@ -315,6 +317,7 @@ public class EditContactView extends Activity {
 		} else {
 			findViewById(R.id.editAddress).setVisibility(View.GONE);
 			_imm.hideSoftInputFromWindow(box.getWindowToken(), 0);
+			((TextView) findViewById(R.id.address2)).setText(address.getText().toString());
 		}
 	}
 	
@@ -333,6 +336,7 @@ public class EditContactView extends Activity {
 		} else {
 			findViewById(R.id.editDOB).setVisibility(View.GONE);
 			_imm.hideSoftInputFromWindow(box.getWindowToken(), 0);
+			((TextView) findViewById(R.id.dob2)).setText(dob.getText().toString());
 		}
 	}
 	

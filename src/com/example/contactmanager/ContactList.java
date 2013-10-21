@@ -34,6 +34,29 @@ public class ContactList {
 	}
 	
 	/**
+	 * Returns a cursor over the contacts matching a search term. Not case sensitive,
+	 * and will match names that begin with the search term. Matches first + last name
+	 * (concatenated together
+	 * @param term = the search term
+	 * @return = cursor with matching contacts
+	 */
+	public Cursor getMatch(String term) {
+		String query = "SELECT * FROM " + DatabaseHelper.TABLE_NAME;
+		
+		if (term.length() != 0) {
+			query += " WHERE upper(firstName)||' '||upper(lastName) LIKE upper(" + "'" + term + "%')";
+		} 
+		Cursor cursor = _db.rawQuery(query, null);
+		
+		if (cursor != null) {
+			cursor.moveToFirst();
+			return cursor;
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Gets a contact by its corresponding ID.
 	 * @param id = the ID of the required contact.
 	 * @return = a Contact object corresponding to the ID.

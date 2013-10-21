@@ -3,8 +3,11 @@ package com.example.contactmanager;
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.ListActivity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 public class MainActivity extends ListActivity implements ActionBar.OnNavigationListener {
 
@@ -48,6 +52,16 @@ public class MainActivity extends ListActivity implements ActionBar.OnNavigation
 		 actionBar.setListNavigationCallbacks(adapter, this);
 
 	}
+	
+	/**
+	 * Sets up the action bar for the search results view of the activity.
+	 */
+	private void actionBarSearchView() {
+		final ActionBar actionBar = getActionBar();
+		actionBar.setLogo(R.drawable.back);
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,19 +96,39 @@ public class MainActivity extends ListActivity implements ActionBar.OnNavigation
 		_adapter = new ContactListAdapter(this, _cursor);
 		_listView.setAdapter(_adapter);
 		
-		//mock();
-		_adapter.getCursor().requery(); // this works, but may be bad design?
+		_adapter.getCursor().requery(); 
+	
+		// Deal with the ACTION_SEARCH intent for the search function in the action bar
+		handleIntent(getIntent());
 	}
 
-	public void mock() {
-		_dm.createContact("Jasper", "Doe", "445 123", "446 123",
-				"021 123", "4 Domain St.", "my@email.com", "22/10/1993");
+	/**
+	 * Handles the intent for this activity. For the action bar search.
+	 * @param intent
+	 */
+	private void handleIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			
+			Cursor cursor = _dm.getMatch(query);
+			
+			ContactListAdapter adapter = new ContactListAdapter(this, cursor);
+			_listView.setAdapter(adapter);
+			
+			actionBarSearchView();
+		}
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		
+		// Associate searchable configuration with the SearchView
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -104,9 +138,6 @@ public class MainActivity extends ListActivity implements ActionBar.OnNavigation
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_search:
-			// filler
-			return true;
 		case R.id.action_add:
 			Contact contact = _dm.newContact();
 			long id = contact.getId();
@@ -117,6 +148,9 @@ public class MainActivity extends ListActivity implements ActionBar.OnNavigation
 			toContact.putExtras(extra);
 			startActivity(toContact);
 			return true;
+		case android.R.id.home:
+			initialiseActionBar();
+			finish();
 		default:
 			return super.onOptionsItemSelected(item);
 		}

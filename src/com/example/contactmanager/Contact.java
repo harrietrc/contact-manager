@@ -64,7 +64,6 @@ public class Contact {
 	/**
 	 * Returns the contact's work phone. May implement automatic formatting
 	 * later.
-	 * 
 	 * @return = work phone number as a string
 	 */
 	public String getWorkPhone() {
@@ -73,7 +72,6 @@ public class Contact {
 
 	/**
 	 * Returns the contact's home phone number.
-	 * 
 	 * @return = home phone number as a string
 	 */
 	public String getHomePhone() {
@@ -82,7 +80,6 @@ public class Contact {
 
 	/**
 	 * Returns the contact's mobile phone number.
-	 * 
 	 * @return = mobile phone number as a string
 	 */
 	public String getMobilePhone() {
@@ -91,13 +88,16 @@ public class Contact {
 
 	/**
 	 * Returns the contact's full name. Here for convenience.
-	 * 
 	 * @return = the contact's first and last names if they exist.
 	 */
 	public String getFullName() {
 		return _firstName + " " + _lastName;
 	}
 
+	/**
+	 * Returns the contact's email address.
+	 * @return = the email address as a string.
+	 */
 	public String getEmail() {
 		return _email;
 	}
