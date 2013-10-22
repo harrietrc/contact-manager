@@ -186,7 +186,8 @@ public class EditContactView extends Activity {
 		String a = address.getText().toString();
 		String d = dob.getText().toString();
 		if (f.equals("") && l.equals("") && e.equals("") && w.equals("")
-				&& h.equals("") && m.equals("") && a.equals("") && d.equals("")) {
+				&& h.equals("") && m.equals("") && a.equals("") && d.equals("")
+				&& _image == null) {
 			ls.deleteContactByID(_id);
 			_id = -1; // An indication of a deletion to ContactView
 		} else {
