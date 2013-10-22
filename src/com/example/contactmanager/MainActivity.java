@@ -36,6 +36,7 @@ public class MainActivity extends ListActivity implements
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowHomeEnabled(false);
 		actionBar.setLogo(null);
+		setTitle("ALL");
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
