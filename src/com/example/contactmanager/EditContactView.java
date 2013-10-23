@@ -79,6 +79,9 @@ public class EditContactView extends Activity {
 		_activity = extra.getString("activity", "edit");
 		setFields();
 		initialiseActionBar();
+
+		// Hide the 'remove photo' text if there is no photo.
+		setRemovePhotoText();
 	}
 
 	/**
@@ -219,6 +222,22 @@ public class EditContactView extends Activity {
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
 			_image = stream.toByteArray();
+
+			// Hide the 'Remove Photo' text if there is no photo.
+			setRemovePhotoText();
+		}
+	}
+
+	/**
+	 * Hides the 'Remove Photo' text if there is no photo.
+	 */
+	private void setRemovePhotoText() {
+		TextView removePhoto = (TextView) findViewById(R.id.removePhoto);
+		if (_image == null) {
+			removePhoto.setVisibility(View.GONE);
+		} else {
+			// Toggle the text on, in case it was 'GONE' previously.
+			removePhoto.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -232,8 +251,6 @@ public class EditContactView extends Activity {
 				android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 		startActivityForResult(cameraIntent, CAMERA_REQUEST);
 	}
-
-	// protected void
 
 	/**
 	 * Identifies whether the corresponding textbox to the first name heading is
@@ -297,7 +314,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the mobile heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v = the view clicked
+	 * @param v  = the view clicked
 	 */
 	public void mobilePhoneClicked(View v) {
 		View box = findViewById(R.id.editMobilePhone);
@@ -322,7 +339,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the home phone heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v  = the view clicked
+	 * @param v = the view clicked
 	 */
 	public void homePhoneClicked(View v) {
 		View box = findViewById(R.id.editHomePhone);
