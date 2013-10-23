@@ -4,44 +4,55 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 /**
- * Prompts the user to cancel any changes or close the dialogue box and return to the activity.
+ * Prompts the user to cancel any changes or close the dialogue box and return
+ * to the activity.
+ * 
  * @author Harriet Robinson-Chen
- *
+ * 
  */
 public class CancelDialogue extends DialogFragment {
-	
-	private String _intent; // 'add' or 'edit': indicates whether this was launched from an 'add contact' activity or an 'edit contact' activity
-	private ContactList _ls; // A contact list
-	private Contact _contact; // The contact being operated upon
 
-	public CancelDialogue(String intent, Contact contact, ContactList ls) {
+	public CancelDialogue() {
 		super();
-		_intent = intent;
-		_ls = ls;
-		_contact = contact;
 	}
 
+	/**
+	 * On create, prompt the user to either cancel changes or return to the
+	 * activity.
+	 */
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				getActivity());
+		// Set up the variables
+		final ContactList ls = new ContactList(getActivity());
+		final String intent = getArguments().getString("intent");
+		final long id = getArguments().getLong("contactID");
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(R.string.cancel_prompt)
 				// Delete the contact
 				.setPositiveButton(R.string.yes,
 						new DialogInterface.OnClickListener() {
 							@Override
-							public void onClick(
-									DialogInterface dialog,
+							public void onClick(DialogInterface dialog,
 									int which) {
-								
+
 								// If this was a new contact, delete it.
-								if (_intent.equals("add")) {
-									_ls.deleteContact(_contact);
+								if (intent.equals("add")) {
+									ls.deleteContactByID(id);
+								} else {
+									// We must be editing, and need to
+									// transition back to the 'view contact'
+									// class.
+									Intent toContact = new Intent(
+											getActivity(), ContactView.class);
+									toContact.putExtra("contactID", id);
+									startActivity(toContact);
 								}
-								
+
 								// Finish, discarding changes.
 								getActivity().finish();
 							}
@@ -50,8 +61,7 @@ public class CancelDialogue extends DialogFragment {
 				.setNegativeButton(R.string.no,
 						new DialogInterface.OnClickListener() {
 							@Override
-							public void onClick(
-									DialogInterface dialog,
+							public void onClick(DialogInterface dialog,
 									int which) {
 							}
 						});

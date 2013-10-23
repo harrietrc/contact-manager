@@ -5,11 +5,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -183,8 +179,11 @@ public class EditContactView extends Activity {
 			return true;
 		case android.R.id.home: // I.e. cancel (I'm using the home button for
 								// convenience)
-			// Trigger the 'cancel contact' dialogue to ask the user for confirmation.
-			CancelDialogue dialogue = new CancelDialogue(_activity, _contact, new ContactList(this));
+			// Trigger the 'cancel contact' dialogue to ask the user for
+			// confirmation.
+			Bundle bundle = packageForCancelDialogue();
+			CancelDialogue dialogue = new CancelDialogue();
+			dialogue.setArguments(bundle);
 			dialogue.show(getFragmentManager(), "dialogue");
 			return true;
 		default:
@@ -217,19 +216,37 @@ public class EditContactView extends Activity {
 			ls.editContact(_id, f, l, e, h, m, w, d, _image, a);
 		}
 	}
-	
+
 	/**
-	 * Overridden to add functionality: pressing the down key should prompt the 'cancel changes' dialogue.
+	 * Overridden to add functionality: pressing the down key should prompt the
+	 * 'cancel changes' dialogue.
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	    	// Trigger the 'cancel contact' dialogue to ask the user for confirmation.
-			CancelDialogue dialogue = new CancelDialogue(_activity, _contact, new ContactList(this));
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			// Trigger the 'cancel contact' dialogue to ask the user for
+			// confirmation.
+			Bundle bundle = packageForCancelDialogue();
+			CancelDialogue dialogue = new CancelDialogue();
+			dialogue.setArguments(bundle);
 			dialogue.show(getFragmentManager(), "dialogue");
-	        return true;
-	    }
-	    return super.onKeyDown(keyCode, event);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	/**
+	 * Smoosh the activity type and contact ID into a bundle for the cancel
+	 * dialogue.
+	 * 
+	 * @return = a bundle with the activity 'type' ('add' or 'edit') and the
+	 * contact ID.
+	 */
+	public Bundle packageForCancelDialogue() {
+		Bundle bundle = new Bundle();
+		bundle.putString("intent",_activity);
+		bundle.putLong("contactID", _id);
+		return bundle;
 	}
 
 	/**
@@ -335,7 +352,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the mobile heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v  = the view clicked
+	 * @param v = the view clicked
 	 */
 	public void mobilePhoneClicked(View v) {
 		View box = findViewById(R.id.editMobilePhone);
@@ -484,7 +501,7 @@ public class EditContactView extends Activity {
 	/**
 	 * Removes the contact photo and clears the ImageView.
 	 * 
-	 * @param v
+	 * @param v = the view clicked
 	 */
 	public void removePhotoClicked(View v) {
 		image.setImageResource(android.R.color.transparent);
