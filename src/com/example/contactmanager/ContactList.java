@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
  * adding, deleting, and modifying contacts. Very dependent on DatabaseHelper,
  * which establishes and manages the database.
  * 
- * @author hrob748
+ * @author Harriet Robinson-Chen
  */
 public class ContactList {
 
@@ -47,6 +47,8 @@ public class ContactList {
 	public Cursor getMatch(String term) {
 		String query = "SELECT * FROM " + DatabaseHelper.TABLE_NAME;
 
+		// Blank search terms should return all contacts. Else, perform the
+		// search.
 		if (term.length() != 0) {
 			query += " WHERE upper(firstName)||' '||upper(lastName) LIKE upper("
 					+ "'" + term + "%')";
@@ -64,8 +66,7 @@ public class ContactList {
 	/**
 	 * Gets a contact by its corresponding ID.
 	 * 
-	 * @param id
-	 *            = the ID of the required contact.
+	 * @param id = the ID of the required contact.
 	 * @return = a Contact object corresponding to the ID.
 	 */
 	public Contact getContactByID(long id) {
@@ -86,7 +87,7 @@ public class ContactList {
 	}
 
 	/**
-	 * Create a contact and add it to the database.
+	 * Create a contact and add its data to the database.
 	 */
 	public Contact createContact(String fName, String lName, String hPhone,
 			String wPhone, String mPhone, String address, String email,
@@ -148,8 +149,7 @@ public class ContactList {
 	/**
 	 * Deletes a contact from the database.
 	 * 
-	 * @param contact
-	 *            = The contact to be deleted.
+	 * @param contact = The contact to be deleted.
 	 */
 	public void deleteContact(Contact contact) {
 		open();
@@ -163,8 +163,7 @@ public class ContactList {
 	 * Given a contact ID, deletes a contact from the database that matches that
 	 * ID.
 	 * 
-	 * @param id
-	 *            = the ID of the contact.
+	 * @param id = the ID of the contact.
 	 */
 	public void deleteContactByID(long id) {
 		open();
@@ -177,8 +176,7 @@ public class ContactList {
 	 * Gets all the data in the database as a cursor. Sort order can be
 	 * specified using the column name to be sorted by.
 	 * 
-	 * @param sortOrder
-	 *            = the DatabaseHelper column name to be sorted by.
+	 * @param sortOrder = the DatabaseHelper column name to be sorted by.
 	 * @return
 	 */
 	public Cursor getAllData(String sortOrder) {
@@ -191,8 +189,7 @@ public class ContactList {
 	 * Converts a cursor into a contact object. I think I can justify it being
 	 * static because calling it makes sense even when no contact list exists.
 	 * 
-	 * @param cursor
-	 *            = the cursor to be converted
+	 * @param cursor = the cursor to be converted
 	 * @return = a Contact object
 	 */
 	public static Contact cursorToContact(Cursor cursor) {

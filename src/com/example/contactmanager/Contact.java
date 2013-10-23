@@ -6,6 +6,13 @@ import java.io.InputStream;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+/**
+ * Class representing a contact, used to make access and manipulation of
+ * database information more convenient and understandable.
+ * 
+ * @author Harriet Robinson-Chen
+ * 
+ */
 public class Contact {
 
 	private String _firstName;
@@ -17,10 +24,10 @@ public class Contact {
 	private String _dob;
 	private String _email;
 	private byte[] _image;
-	private long _id;
+	private long _id; // ID for indexing in the database.
 
 	/**
-	 * Blank for now. Obviously won't be later.
+	 * Image must be initialised to null to avoid errors.
 	 */
 	public Contact() {
 		_image = null;
@@ -143,52 +150,112 @@ public class Contact {
 		}
 	}
 
+	/**
+	 * Returns the contact's image as a byte array.
+	 * 
+	 * @return
+	 */
 	public byte[] getImageByte() {
 		return _image;
 	}
 
+	/**
+	 * Return's the contact's ID for the database.
+	 * 
+	 * @return
+	 */
 	public long getId() {
 		return _id;
 	}
 
 	/* SETTERS */
 
+	/**
+	 * Sets the contact's ID
+	 * 
+	 * @param id
+	 */
 	public void setID(long id) {
 		_id = id;
 	}
 
+	/**
+	 * Sets the contact's date of birth.
+	 * 
+	 * @param dob
+	 */
 	public void setDOB(String dob) {
 		_dob = dob;
 	}
 
+	/**
+	 * Sets the contact's address.
+	 * 
+	 * @param address
+	 */
 	public void setAddress(String address) {
 		_address = address;
 	}
 
+	/**
+	 * Sets the contact's first name.
+	 * 
+	 * @param firstName
+	 */
 	public void setFirstName(String firstName) {
 		_firstName = firstName;
 	}
 
+	/**
+	 * Sets the contact's last name.
+	 * 
+	 * @param lastName
+	 */
 	public void setLastName(String lastName) {
 		_lastName = lastName;
 	}
 
+	/**
+	 * Sets the contact's work phone number.
+	 * 
+	 * @param workPhone
+	 */
 	public void setWorkPhone(String workPhone) {
 		_workPhone = workPhone;
 	}
 
+	/**
+	 * Sets the contact's home phone number.
+	 * 
+	 * @param homePhone
+	 */
 	public void setHomePhone(String homePhone) {
 		_homePhone = homePhone;
 	}
 
+	/**
+	 * Sets the contact's mobile phone number.
+	 * 
+	 * @param mobilePhone
+	 */
 	public void setMobilePhone(String mobilePhone) {
 		_mobilePhone = mobilePhone;
 	}
 
+	/**
+	 * Sets the contact's email address.
+	 * 
+	 * @param email
+	 */
 	public void setEmail(String email) {
 		_email = email;
 	}
 
+	/**
+	 * From a byte array, sets the contact's image.
+	 * 
+	 * @param image
+	 */
 	public void setImage(byte[] image) {
 		_image = image;
 	}

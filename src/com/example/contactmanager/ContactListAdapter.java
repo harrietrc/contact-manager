@@ -9,6 +9,13 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Class that adapts contact data to the row item layouts for the main list
+ * view.
+ * 
+ * @author Harriet Robinson-Chen
+ * 
+ */
 class ContactListAdapter extends CursorAdapter {
 
 	public ContactListAdapter(Context context, Cursor c) {

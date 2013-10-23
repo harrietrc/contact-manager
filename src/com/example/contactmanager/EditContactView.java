@@ -1,7 +1,6 @@
 package com.example.contactmanager;
 
 import java.io.ByteArrayOutputStream;
-
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.ActionBar;
@@ -20,15 +19,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Activity that allows a contact to be edited (or added - it is used for both
+ * functions).
+ * 
+ * @author Harriet Robinson-Chen
+ * 
+ */
 public class EditContactView extends Activity {
 
-	private Contact _contact;
-	private InputMethodManager _imm;
-	private long _id;
+	private Contact _contact; // The contact we are working with
+	private InputMethodManager _imm; // For the soft keyboard
+	private long _id; // The contact ID
 	private String _activity; // either 'add' or 'edit'
 	private static final int CAMERA_REQUEST = 1888;
-	private byte[] _image = null;
+	private byte[] _image;
 
+	/* Views that display contact attributes */
 	private ImageView image;
 	private EditText first;
 	private EditText last;
@@ -42,15 +49,17 @@ public class EditContactView extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		_image = null;
+
+		// Set the layout
 		setContentView(R.layout.edit_contact);
 
+		// No more activity transition animation
 		overridePendingTransition(0, 0);
 
 		// Sets up the keyboard
 		_imm = (InputMethodManager) this
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
-
-		/* Make this a method */
 
 		// Set up database
 		DatabaseHelper dbh = new DatabaseHelper(this);
@@ -85,13 +94,11 @@ public class EditContactView extends Activity {
 			actionBar.setTitle("New Contact");
 		}
 
+		// Set up the actions and graphical elements
 		actionBar.setLogo(R.drawable.cancel);
 		actionBar.setHomeButtonEnabled(true);
 		ImageView view = (ImageView) findViewById(android.R.id.home);
-		view.setPadding(0, 0, 50, 0); // I don't think hard coding this is an
-										// especially great idea, so I'll change
-										// it when I
-		// switch to actionbarsherlock.
+		view.setPadding(0, 0, 50, 0);
 	}
 
 	/**
@@ -136,6 +143,9 @@ public class EditContactView extends Activity {
 		dob2.setText(_contact.getDOB());
 	}
 
+	/**
+	 * Inflates and sets up the menu.
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -185,16 +195,23 @@ public class EditContactView extends Activity {
 		String m = mobile.getText().toString();
 		String a = address.getText().toString();
 		String d = dob.getText().toString();
+		// If all the editable views are blank (including the image), delete the
+		// contact.
 		if (f.equals("") && l.equals("") && e.equals("") && w.equals("")
 				&& h.equals("") && m.equals("") && a.equals("") && d.equals("")
 				&& _image == null) {
 			ls.deleteContactByID(_id);
 			_id = -1; // An indication of a deletion to ContactView
 		} else {
+			// Save the contact to the database.
 			ls.editContact(_id, f, l, e, h, m, w, d, _image, a);
 		}
 	}
 
+	/**
+	 * Processes the image that the camera returns and saves it to the image
+	 * field as a byte array.
+	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CAMERA_REQUEST) {
 			Bitmap photo = (Bitmap) data.getExtras().get("data");
@@ -205,16 +222,10 @@ public class EditContactView extends Activity {
 		}
 	}
 
-	/*
-	 * Methods that deal with clicks. Should refactor by creating a generator to
-	 * aid maintenance.
-	 */
-
 	/**
 	 * Starts the camera app when the ImageView is clicked.
 	 * 
-	 * @param v
-	 *            = the ImageView
+	 * @param v = the ImageView
 	 */
 	public void imageClicked(View v) {
 		Intent cameraIntent = new Intent(
@@ -228,8 +239,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the first name heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v
-	 *            = the view clicked
+	 * @param v = the view clicked
 	 */
 	public void firstNameClicked(View v) {
 		View box = findViewById(R.id.editFirstName);
@@ -262,8 +272,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the last name heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v
-	 *            = the view clicked
+	 * @param v = the view clicked
 	 */
 	public void lastNameClicked(View v) {
 		View box = findViewById(R.id.editLastName);
@@ -288,8 +297,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the mobile heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v
-	 *            = the view clicked
+	 * @param v = the view clicked
 	 */
 	public void mobilePhoneClicked(View v) {
 		View box = findViewById(R.id.editMobilePhone);
@@ -314,8 +322,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the home phone heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v
-	 *            = the view clicked
+	 * @param v  = the view clicked
 	 */
 	public void homePhoneClicked(View v) {
 		View box = findViewById(R.id.editHomePhone);
@@ -340,8 +347,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the work phone heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v
-	 *            = the view clicked
+	 * @param v = the view clicked
 	 */
 	public void workPhoneClicked(View v) {
 		View box = findViewById(R.id.editWorkPhone);
@@ -366,8 +372,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the email heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v
-	 *            = the view clicked
+	 * @param v = the view clicked
 	 */
 	public void emailClicked(View v) {
 		View box = findViewById(R.id.editEmail);
@@ -392,8 +397,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the address heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v
-	 *            = the view clicked
+	 * @param v = the view clicked
 	 */
 	public void addressClicked(View v) {
 		View box = findViewById(R.id.editAddress);
@@ -418,8 +422,7 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the date of birth heading
 	 * is visible and either shows or hides it as relevant.
 	 * 
-	 * @param v
-	 *            = the view clicked
+	 * @param v = the view clicked
 	 */
 	public void dobClicked(View v) {
 		View box = findViewById(R.id.editDOB);
@@ -440,4 +443,13 @@ public class EditContactView extends Activity {
 		}
 	}
 
+	/**
+	 * Removes the contact photo and clears the ImageView.
+	 * 
+	 * @param v
+	 */
+	public void removePhotoClicked(View v) {
+		image.setImageResource(android.R.color.transparent);
+		_image = null;
+	}
 }

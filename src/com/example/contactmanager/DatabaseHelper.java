@@ -4,6 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Sets up and manages the SQLite database. Interacts closely with ContactList.
+ * 
+ * @author Harriet Robinson-Chen
+ * 
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public static final String TABLE_NAME = "Contact";
@@ -20,34 +26,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String COL_ADDRESS = "address";
 	public static final String COL_DOB = "dob";
 	public static final String COL_IMAGE = "image";
-	
-	public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + 
-			"(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_FIRSTNAME + 
-			" TEXT NOT NULL DEFAULT ''," + COL_LASTNAME + 
-			" TEXT NOT NULL DEFAULT ''," + COL_HOMEPHONE +
-			" TEXT NOT NULL DEFAULT ''," + COL_WORKPHONE +
-			" TEXT NOT NULL DEFAULT ''," + COL_MOBILEPHONE +
-			" TEXT NOT NULL DEFAULT ''," + COL_EMAIL +
-			" TEXT NOT NULL DEFAULT ''," + COL_ADDRESS +
-			" TEXT NOT NULL DEFAULT ''," + COL_DOB +
-			" TEXT NOT NULL DEFAULT ''," + COL_IMAGE
-			+ " BLOB)";
-	
-	
+
+	// String for SQLite table creation.
+	public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS "
+			+ TABLE_NAME + "(" + COL_ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_FIRSTNAME
+			+ " TEXT NOT NULL DEFAULT ''," + COL_LASTNAME
+			+ " TEXT NOT NULL DEFAULT ''," + COL_HOMEPHONE
+			+ " TEXT NOT NULL DEFAULT ''," + COL_WORKPHONE
+			+ " TEXT NOT NULL DEFAULT ''," + COL_MOBILEPHONE
+			+ " TEXT NOT NULL DEFAULT ''," + COL_EMAIL
+			+ " TEXT NOT NULL DEFAULT ''," + COL_ADDRESS
+			+ " TEXT NOT NULL DEFAULT ''," + COL_DOB
+			+ " TEXT NOT NULL DEFAULT ''," + COL_IMAGE + " BLOB)";
+
+	// Our database
 	private SQLiteDatabase _db;
-	
-	public static final String[] FIELDS = {COL_ID, COL_FIRSTNAME, COL_LASTNAME,
-		COL_HOMEPHONE, COL_WORKPHONE, COL_MOBILEPHONE, COL_ADDRESS, COL_DOB, COL_IMAGE};
-	
+
+	public static final String[] FIELDS = { COL_ID, COL_FIRSTNAME,
+			COL_LASTNAME, COL_HOMEPHONE, COL_WORKPHONE, COL_MOBILEPHONE,
+			COL_ADDRESS, COL_DOB, COL_IMAGE };
+
 	public DatabaseHelper(Context context) {
 		super(context, TABLE_NAME, null, DB_VERSION);
 	}
-	
+
+	/**
+	 * Creates the table of contacts.
+	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_TABLE);
 	}
 
+	/**
+	 * Performs upgrade activities.
+	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
 		_db.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME);

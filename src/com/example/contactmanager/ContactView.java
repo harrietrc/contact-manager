@@ -10,7 +10,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -88,7 +90,7 @@ public class ContactView extends Activity {
 	}
 
 	/**
-	 * Initialises the action bar.
+	 * Initialises the action bar, setting icons and titles.
 	 */
 	private void initialiseActionBar() {
 		final ActionBar actionBar = getActionBar();
@@ -120,6 +122,11 @@ public class ContactView extends Activity {
 			finish();
 			return true;
 		case R.id.action_delete:
+
+			/*
+			 * A delete prompt that is instantiated if the user selects the
+			 * delete action.
+			 */
 			class DeletePrompt extends DialogFragment {
 
 				protected DeletePrompt() {
@@ -131,6 +138,7 @@ public class ContactView extends Activity {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							getActivity());
 					builder.setMessage(R.string.delete_prompt)
+							// Delete the contact
 							.setPositiveButton(R.string.yes,
 									new DialogInterface.OnClickListener() {
 										@Override
@@ -141,6 +149,7 @@ public class ContactView extends Activity {
 											getActivity().finish();
 										}
 									})
+							// Cancel deletion action
 							.setNegativeButton(R.string.no,
 									new DialogInterface.OnClickListener() {
 										@Override
@@ -157,6 +166,8 @@ public class ContactView extends Activity {
 			dialogue.show(getFragmentManager(), "dialogue");
 			return true;
 		case android.R.id.home:
+			// The contacts list should still be open. Finishing the activity
+			// will return the user to their place in the list.
 			finish();
 			return true;
 		default:
@@ -178,14 +189,42 @@ public class ContactView extends Activity {
 	 * Sets the text in each of the text and image views.
 	 */
 	private void setViews() {
+		String mobile = _contact.getMobilePhone();
+		String home = _contact.getHomePhone();
+		String work = _contact.getWorkPhone();
+		String email = _contact.getEmail();
+		String address = _contact.getAddress();
+		String dob = _contact.getDOB();
+
+		// Set view data for views that will always take up space, regardless of
+		// whether they're blank or not.
 		_image.setImageBitmap(_contact.getImage());
 		_name.setText(_contact.getFullName());
-		_mobile.setText(_contact.getMobilePhone());
-		_home.setText(_contact.getHomePhone());
-		_work.setText(_contact.getWorkPhone());
-		_email.setText(_contact.getEmail());
-		_address.setText(_contact.getAddress());
-		_dob.setText(_contact.getDOB());
+
+		/*
+		 * Go through the contact's attributes and hide headings for blank ones.
+		 * If the attribute is not an empty string, fill the relevant view with
+		 * data.
+		 */
+
+		String[] attributes = { mobile, home, work, email, address, dob };
+		LinearLayout[] headings = {
+				(LinearLayout) findViewById(R.id.mobile),
+				(LinearLayout) findViewById(R.id.home),
+				(LinearLayout) findViewById(R.id.work),
+				(LinearLayout) findViewById(R.id.email),
+				(LinearLayout) findViewById(R.id.address),
+				(LinearLayout) findViewById(R.id.dob) };
+		TextView[] text = { _mobile, _home, _work, _email, _address, _dob };
+
+		for (int i = 0; i < attributes.length; i++) {
+			if (attributes[i].trim().equals("")) {
+				headings[i].setVisibility(View.GONE);
+				//text[i].setVisibility(View.GONE);
+			} else {
+				text[i].setText(attributes[i]);
+			}
+		}
 	}
 
 	/**
