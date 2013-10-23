@@ -5,11 +5,16 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -178,7 +183,9 @@ public class EditContactView extends Activity {
 			return true;
 		case android.R.id.home: // I.e. cancel (I'm using the home button for
 								// convenience)
-			finish();
+			// Trigger the 'cancel contact' dialogue to ask the user for confirmation.
+			CancelDialogue dialogue = new CancelDialogue(_activity, _contact, new ContactList(this));
+			dialogue.show(getFragmentManager(), "dialogue");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -209,6 +216,20 @@ public class EditContactView extends Activity {
 			// Save the contact to the database.
 			ls.editContact(_id, f, l, e, h, m, w, d, _image, a);
 		}
+	}
+	
+	/**
+	 * Overridden to add functionality: pressing the down key should prompt the 'cancel changes' dialogue.
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	// Trigger the 'cancel contact' dialogue to ask the user for confirmation.
+			CancelDialogue dialogue = new CancelDialogue(_activity, _contact, new ContactList(this));
+			dialogue.show(getFragmentManager(), "dialogue");
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 
 	/**

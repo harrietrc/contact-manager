@@ -123,7 +123,7 @@ public class ContactView extends Activity {
 			return true;
 		case R.id.action_delete:
 
-			/*
+			/**
 			 * A delete prompt that is instantiated if the user selects the
 			 * delete action.
 			 */
