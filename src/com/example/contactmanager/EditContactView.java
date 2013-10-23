@@ -179,6 +179,35 @@ public class EditContactView extends Activity {
 			return true;
 		case android.R.id.home: // I.e. cancel (I'm using the home button for
 								// convenience)
+			
+			// If this is an edit activity, check for changes first before 
+			// opening the cancel dialogue.
+			if (_activity.equals("edit")) {
+				// Fields and values for comparison
+				EditText[] fields = {first, last, mobile, home, work, email,
+						address, dob};
+				String[] text = {_contact.getFirstName(), _contact.getLastName(),
+						_contact.getMobilePhone(), _contact.getHomePhone(),
+						_contact.getWorkPhone(), _contact.getEmail(),
+						_contact.getAddress(), _contact.getDOB()};
+				boolean isSame = true;
+				
+				// Loop through, comparing the contact attributes and text fields.
+				for (int i=0; i<fields.length; i++) {
+					if (!text[i].trim().equals(fields[i].getText().toString().trim())) {
+						isSame = false;
+						break;
+					}
+				}
+				
+				// If the no attributes have been changed the dialogue
+				// box need not be opened.
+				if (isSame == true) {
+					finish();
+					return true;
+				}
+			}
+			
 			// Trigger the 'cancel contact' dialogue to ask the user for
 			// confirmation.
 			Bundle bundle = packageForCancelDialogue();
@@ -506,5 +535,8 @@ public class EditContactView extends Activity {
 	public void removePhotoClicked(View v) {
 		image.setImageResource(android.R.color.transparent);
 		_image = null;
+		
+		// Vanish the 'remove image' text
+		findViewById(R.id.removePhoto).setVisibility(View.GONE);
 	}
 }

@@ -117,7 +117,7 @@ public class MainActivity extends ListActivity implements
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
-
+			
 			Cursor cursor = _dm.getMatch(query);
 
 			ContactListAdapter adapter = new ContactListAdapter(this, cursor);
