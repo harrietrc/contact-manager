@@ -203,6 +203,9 @@ public class EditContactView extends Activity {
 				// If the no attributes have been changed the dialogue
 				// box need not be opened.
 				if (isSame == true) {
+					toContact = new Intent(this, ContactView.class);
+					toContact.putExtra("contactID", _id);
+					startActivity(toContact);
 					finish();
 					return true;
 				}
