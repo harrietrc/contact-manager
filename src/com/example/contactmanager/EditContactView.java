@@ -34,7 +34,8 @@ public class EditContactView extends Activity {
 	private long _id; // The contact ID
 	private String _activity; // either 'add' or 'edit'
 	private static final int CAMERA_REQUEST = 1888;
-	private byte[] _image;
+	private byte[] _image; // The contact's image
+	private byte[] _oldImage; // The contact's original image
 
 	/* Views that display contact attributes */
 	private ImageView image;
@@ -51,7 +52,8 @@ public class EditContactView extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		_image = null;
-		
+		_oldImage = null;
+
 		// Set the layout
 		setContentView(R.layout.edit_contact);
 
@@ -75,6 +77,7 @@ public class EditContactView extends Activity {
 		cursor.moveToFirst();
 		_contact = ContactList.cursorToContact(cursor);
 		_image = _contact.getImageByte();
+		_oldImage = _image;
 
 		// Set up the views and action bar
 		_activity = extra.getString("activity", "edit");
@@ -179,45 +182,51 @@ public class EditContactView extends Activity {
 			return true;
 		case android.R.id.home: // I.e. cancel (I'm using the home button for
 								// convenience)
+
+			// Fields and values for comparison
+			EditText[] fields = { first, last, mobile, home, work, email,
+					address, dob };
+			String[] text = { _contact.getFirstName(), _contact.getLastName(),
+					_contact.getMobilePhone(), _contact.getHomePhone(),
+					_contact.getWorkPhone(), _contact.getEmail(),
+					_contact.getAddress(), _contact.getDOB()};
+			boolean isSame = true;
+
+			// Loop through, comparing the contact attributes and text fields.
+			for (int i = 0; i < fields.length; i++) {
+				if (!text[i].trim().equals(
+						fields[i].getText().toString().trim())) {
+					isSame = false;
+					break;
+				}
+			}
 			
-				// Fields and values for comparison
-				EditText[] fields = {first, last, mobile, home, work, email,
-						address, dob};
-				String[] text = {_contact.getFirstName(), _contact.getLastName(),
-						_contact.getMobilePhone(), _contact.getHomePhone(),
-						_contact.getWorkPhone(), _contact.getEmail(),
-						_contact.getAddress(), _contact.getDOB()};
-				boolean isSame = true;
-				
-				// Loop through, comparing the contact attributes and text fields.
-				for (int i=0; i<fields.length; i++) {
-					if (!text[i].trim().equals(fields[i].getText().toString().trim())) {
-						isSame = false;
-						break;
-					}
-				}
-				
-				// If the no attributes have been changed the dialogue
-				// box need not be opened.
-				if (isSame == true && _activity.equals("edit")) {
-					toContact = new Intent(this, ContactView.class);
-					toContact.putExtra("contactID", _id);
-					startActivity(toContact);
-					finish();
-				} else if (isSame == true && _activity.equals("add")) {
-					// Delete the new contact
-					ContactList ls = new ContactList(this);
-					ls.deleteContactByID(_id);
-					finish();
-				} else {
-					// Trigger the 'cancel contact' dialogue to ask the user for
-					// confirmation.
-					Bundle bundle = packageForCancelDialogue();
-					CancelDialogue dialogue = new CancelDialogue();
-					dialogue.setArguments(bundle);
-					dialogue.show(getFragmentManager(), "dialogue");
-				}
-				return true;
+			// Check the image to see if it has changed
+			if (_image != _oldImage) {
+				isSame = false;
+			}
+
+			// If the no attributes have been changed the dialogue
+			// box need not be opened.
+			if (isSame == true && _activity.equals("edit")) {
+				toContact = new Intent(this, ContactView.class);
+				toContact.putExtra("contactID", _id);
+				startActivity(toContact);
+				finish();
+			} else if (isSame == true && _activity.equals("add")) {
+				// Delete the new contact
+				ContactList ls = new ContactList(this);
+				ls.deleteContactByID(_id);
+				finish();
+			} else {
+				// Trigger the 'cancel contact' dialogue to ask the user for
+				// confirmation.
+				Bundle bundle = packageForCancelDialogue();
+				CancelDialogue dialogue = new CancelDialogue();
+				dialogue.setArguments(bundle);
+				dialogue.show(getFragmentManager(), "dialogue");
+			}
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -266,17 +275,17 @@ public class EditContactView extends Activity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	/**
 	 * Smoosh the activity type and contact ID into a bundle for the cancel
 	 * dialogue.
 	 * 
 	 * @return = a bundle with the activity 'type' ('add' or 'edit') and the
-	 * contact ID.
+	 *         contact ID.
 	 */
 	public Bundle packageForCancelDialogue() {
 		Bundle bundle = new Bundle();
-		bundle.putString("intent",_activity);
+		bundle.putString("intent", _activity);
 		bundle.putLong("contactID", _id);
 		return bundle;
 	}
@@ -484,7 +493,8 @@ public class EditContactView extends Activity {
 	 * Identifies whether the corresponding textbox to the address heading is
 	 * visible and either shows or hides it as relevant.
 	 * 
-	 * @param v = the view clicked
+	 * @param v
+	 *            = the view clicked
 	 */
 	public void addressClicked(View v) {
 		View box = findViewById(R.id.editAddress);
@@ -538,7 +548,7 @@ public class EditContactView extends Activity {
 	public void removePhotoClicked(View v) {
 		image.setImageResource(android.R.color.transparent);
 		_image = null;
-		
+
 		// Vanish the 'remove image' text
 		findViewById(R.id.removePhoto).setVisibility(View.GONE);
 	}
