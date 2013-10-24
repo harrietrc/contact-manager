@@ -53,7 +53,6 @@ public class ContactView extends Activity {
 		// If the ID is 0, the contact was blank and has been deleted. Return to
 		// the list view.
 		if (_id == -1) {
-			System.out.println("yes");
 			finish();
 			return; // Else onCreate() keeps executing
 		}

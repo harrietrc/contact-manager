@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -24,6 +25,8 @@ public class MainActivity extends ListActivity implements
 	private ContactList _dm;
 	private Cursor _cursor;
 	private String _sortOrder;
+	private Menu _menu;
+	private boolean _isMenuItemsStateHide;
 
 	// String giving the default column to sort by.
 	public static final String DEFAULT_SORT_ORDER = "ORDER BY "
@@ -36,7 +39,7 @@ public class MainActivity extends ListActivity implements
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowHomeEnabled(false);
 		actionBar.setLogo(null);
-		setTitle("ALL");
+		setTitle(this.getString(R.string.all_contacts));
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
@@ -53,7 +56,6 @@ public class MainActivity extends ListActivity implements
 
 		// Set up the navigation for the spinner
 		actionBar.setListNavigationCallbacks(adapter, this);
-
 	}
 
 	/**
@@ -61,14 +63,22 @@ public class MainActivity extends ListActivity implements
 	 */
 	private void actionBarSearchView() {
 		final ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(R.drawable.back);
 		actionBar.setHomeButtonEnabled(true);
-		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setTitle(this.getString(R.string.search_title));
+		actionBar.setDisplayShowTitleEnabled(true);
+		ImageView view = (ImageView) findViewById(android.R.id.home);
+		view.setPadding(0, 0, 40, 0);
+		_isMenuItemsStateHide = true;
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Make sure the menu items aren't hidden
+		_isMenuItemsStateHide = false;
 
 		// Removes transition animation
 		overridePendingTransition(0, 0);
@@ -118,17 +128,23 @@ public class MainActivity extends ListActivity implements
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
 			
-			Cursor cursor = _dm.getMatch(query);
+			_cursor = _dm.getMatch(query);
 
-			ContactListAdapter adapter = new ContactListAdapter(this, cursor);
+			ContactListAdapter adapter = new ContactListAdapter(this, _cursor);
 			_listView.setAdapter(adapter);
 
 			actionBarSearchView();
 		}
 	}
 
+	/**
+	 * Sets up the action bar, inflating and initialising actions.
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		// Save the reference for later
+		_menu = menu;
+		
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 
@@ -139,7 +155,21 @@ public class MainActivity extends ListActivity implements
 		searchView.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));
 
-		return super.onCreateOptionsMenu(menu);
+		boolean ret = super.onCreateOptionsMenu(menu);
+		
+		// Set the add and search buttons to visible, in case they were 
+		// turned off for searching.
+		if (_isMenuItemsStateHide == false) {
+			_menu.findItem(R.id.action_add).setVisible(true);
+			_menu.findItem(R.id.search).setVisible(true);
+		} else { // Hide the menu items (search results are active)
+			_menu.findItem(R.id.action_add).setVisible(false);
+			_menu.findItem(R.id.search).setVisible(false);
+			// Get rid of the spinner
+			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		}
+		
+		return ret;
 	}
 
 	/**
@@ -175,16 +205,22 @@ public class MainActivity extends ListActivity implements
 
 		_dm.open();
 
-		// This is the only method of refreshing that I could get to work.
-		// It seems to be a relatively common method.
-		_cursor = _dm.getAllData(_sortOrder);
-		_adapter.swapCursor(_cursor);
+		if (_isMenuItemsStateHide == false) { // We are in the usual list view
+			// This is the only method of refreshing that I could get to work.
+			// It seems to be a relatively common method.
+			_cursor = _dm.getAllData(_sortOrder);
+			_adapter.swapCursor(_cursor);
+		} else { // Search results are shown
+			_adapter.swapCursor(_cursor);
+		}
 
 		super.onResume();
 	}
 
+	/**
+	 * On pause... pause.
+	 */
 	protected void onPause() {
-		_dm.close();
 		super.onPause();
 	}
 

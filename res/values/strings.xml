@@ -39,5 +39,6 @@
     <string name="search_hint">Enter a contact name</string>
     <string name="remove_image">REMOVE IMAGE</string>
     <string name="cancel_prompt">Cancel changes?</string>
+    <string name="search_title">SEARCH RESULTS</string>
 
 </resources>
