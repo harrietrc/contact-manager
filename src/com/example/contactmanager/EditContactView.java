@@ -295,6 +295,7 @@ public class EditContactView extends Activity {
 	 * field as a byte array.
 	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		overridePendingTransition(0, 0);
 		if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
 			Bitmap photo = (Bitmap) data.getExtras().get("data");
 			image.setImageBitmap(photo);
@@ -329,6 +330,7 @@ public class EditContactView extends Activity {
 		Intent cameraIntent = new Intent(
 				android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 		startActivityForResult(cameraIntent, CAMERA_REQUEST);
+		overridePendingTransition(0, 0);
 	}
 
 	/**
