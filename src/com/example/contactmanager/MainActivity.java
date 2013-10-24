@@ -66,6 +66,8 @@ public class MainActivity extends ListActivity implements
 	 */
 	private void actionBarSearchView() {
 		final ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
 		actionBar.setTitle(this.getString(R.string.search_title));
 		actionBar.setDisplayShowTitleEnabled(true);
 		ImageView view = (ImageView) findViewById(android.R.id.home);
@@ -248,6 +250,7 @@ public class MainActivity extends ListActivity implements
 		} else { // Search results are shown
 			boolean isNotEmptyResults = performSearchQuery();
 			if (isNotEmptyResults) {
+				performSearchQuery();
 				_adapter.swapCursor(_cursor);
 			} else {
 				// If the results list is empty due to an update to a contact, 

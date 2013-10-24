@@ -50,8 +50,10 @@ public class ContactList {
 		// Blank search terms should return all contacts. Else, perform the
 		// search.
 		if (term.length() != 0) {
-			query += " WHERE upper(firstName)||' '||upper(lastName) LIKE upper("
-					+ "'" + term + "%')";
+			String formattedTerm = term.replaceAll("\\s+","").replace("'","\'").toUpperCase();
+			query += " WHERE upper(firstName)||upper(lastName) LIKE '" + 
+			formattedTerm + "%' OR upper(firstName) LIKE '" + formattedTerm 
+			+ "%' OR upper(lastName) LIKE '" + formattedTerm + "%'";
 		}
 		Cursor cursor = _db.rawQuery(query, null);
 
