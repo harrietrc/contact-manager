@@ -33,12 +33,14 @@
     <string name="last_name">LAST NAME</string>
     <string name="first_name">FIRST NAME</string>
     <string name="title_activity_edit_contact_view">EditContactView</string>
-    <string name="action_save">Save</string>
-    <string name="action_cancel">Cancel</string>
+    <string name="action_save">SAVE</string>
+    <string name="action_cancel">CANCEL</string>
     <string name="contact_image_description">An image representing the contact.</string>
     <string name="search_hint">Enter a contact name</string>
     <string name="remove_image">REMOVE IMAGE</string>
     <string name="cancel_prompt">Cancel changes?</string>
     <string name="search_title">SEARCH RESULTS</string>
+    <string name="no_results_prompt">No matching contacts.</string>
+    <string name="ok">OK</string>
 
 </resources>

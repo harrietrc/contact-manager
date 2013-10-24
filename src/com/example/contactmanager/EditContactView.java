@@ -51,7 +51,7 @@ public class EditContactView extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		_image = null;
-
+		
 		// Set the layout
 		setContentView(R.layout.edit_contact);
 
@@ -180,9 +180,6 @@ public class EditContactView extends Activity {
 		case android.R.id.home: // I.e. cancel (I'm using the home button for
 								// convenience)
 			
-			// If this is an edit activity, check for changes first before 
-			// opening the cancel dialogue.
-			if (_activity.equals("edit")) {
 				// Fields and values for comparison
 				EditText[] fields = {first, last, mobile, home, work, email,
 						address, dob};
@@ -202,22 +199,25 @@ public class EditContactView extends Activity {
 				
 				// If the no attributes have been changed the dialogue
 				// box need not be opened.
-				if (isSame == true) {
+				if (isSame == true && _activity.equals("edit")) {
 					toContact = new Intent(this, ContactView.class);
 					toContact.putExtra("contactID", _id);
 					startActivity(toContact);
 					finish();
-					return true;
+				} else if (isSame == true && _activity.equals("add")) {
+					// Delete the new contact
+					ContactList ls = new ContactList(this);
+					ls.deleteContactByID(_id);
+					finish();
+				} else {
+					// Trigger the 'cancel contact' dialogue to ask the user for
+					// confirmation.
+					Bundle bundle = packageForCancelDialogue();
+					CancelDialogue dialogue = new CancelDialogue();
+					dialogue.setArguments(bundle);
+					dialogue.show(getFragmentManager(), "dialogue");
 				}
-			}
-			
-			// Trigger the 'cancel contact' dialogue to ask the user for
-			// confirmation.
-			Bundle bundle = packageForCancelDialogue();
-			CancelDialogue dialogue = new CancelDialogue();
-			dialogue.setArguments(bundle);
-			dialogue.show(getFragmentManager(), "dialogue");
-			return true;
+				return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

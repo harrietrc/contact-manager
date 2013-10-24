@@ -2,9 +2,11 @@ package com.example.contactmanager;
 
 import android.os.Bundle;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.view.Menu;
@@ -39,7 +41,7 @@ public class MainActivity extends ListActivity implements
 	private void initialiseActionBar() {
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowHomeEnabled(false);
-		actionBar.setLogo(null);
+		actionBar.setLogo(R.drawable.back);
 		setTitle(this.getString(R.string.all_contacts));
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -65,7 +67,6 @@ public class MainActivity extends ListActivity implements
 	private void actionBarSearchView() {
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(R.drawable.back);
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setTitle(this.getString(R.string.search_title));
 		actionBar.setDisplayShowTitleEnabled(true);
@@ -135,6 +136,20 @@ public class MainActivity extends ListActivity implements
 			if (isNotEmptyResults) {
 				// Customise the action bar for search
 				actionBarSearchView();
+			} else {
+				// Let the user know that the result of their search was empty.
+				new AlertDialog.Builder(this)
+					.setTitle(this.getString(R.string.no_results_prompt))
+					.setNeutralButton(this.getString(R.string.ok), new DialogInterface.OnClickListener() {
+						
+						/**
+						 * Close the dialogue box.
+						 */
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+						}
+					})
+					.show(); // Show the dialogue box.
 			}
 		}
 	}
