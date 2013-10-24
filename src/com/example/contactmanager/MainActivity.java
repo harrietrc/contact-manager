@@ -27,6 +27,7 @@ public class MainActivity extends ListActivity implements
 	private String _sortOrder;
 	private Menu _menu;
 	private boolean _isMenuItemsStateHide;
+	private String _query;
 
 	// String giving the default column to sort by.
 	public static final String DEFAULT_SORT_ORDER = "ORDER BY "
@@ -126,15 +127,24 @@ public class MainActivity extends ListActivity implements
 	 */
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
+			_query = intent.getStringExtra(SearchManager.QUERY);
 			
-			_cursor = _dm.getMatch(query);
-
-			ContactListAdapter adapter = new ContactListAdapter(this, _cursor);
-			_listView.setAdapter(adapter);
-
+			// Perform the search
+			performSearchQuery();
+			
+			// Customise the action bar for search
 			actionBarSearchView();
 		}
+	}
+	
+	/**
+	 * Perform a search, based on an existing query. A class-wide cursor will
+	 * be set.
+	 */
+	private void performSearchQuery() {
+		_cursor = _dm.getMatch(_query);
+		ContactListAdapter adapter = new ContactListAdapter(this, _cursor);
+		_listView.setAdapter(adapter);
 	}
 
 	/**
@@ -211,6 +221,7 @@ public class MainActivity extends ListActivity implements
 			_cursor = _dm.getAllData(_sortOrder);
 			_adapter.swapCursor(_cursor);
 		} else { // Search results are shown
+			performSearchQuery();
 			_adapter.swapCursor(_cursor);
 		}
 
