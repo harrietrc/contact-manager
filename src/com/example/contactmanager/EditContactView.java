@@ -286,7 +286,7 @@ public class EditContactView extends Activity {
 	 * field as a byte array.
 	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == CAMERA_REQUEST) {
+		if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
 			Bitmap photo = (Bitmap) data.getExtras().get("data");
 			image.setImageBitmap(photo);
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();

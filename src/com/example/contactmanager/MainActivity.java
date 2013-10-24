@@ -20,14 +20,14 @@ import android.widget.SearchView;
 public class MainActivity extends ListActivity implements
 		ActionBar.OnNavigationListener {
 
-	private ListView _listView;
-	private ContactListAdapter _adapter;
-	private ContactList _dm;
-	private Cursor _cursor;
-	private String _sortOrder;
-	private Menu _menu;
-	private boolean _isMenuItemsStateHide;
-	private String _query;
+	private ListView _listView; // The main component of the activity
+	private ContactListAdapter _adapter; // Adapts the data model
+	private ContactList _dm; // The data model for this view
+	private Cursor _cursor; // A cursor with all the contacts and data for the listview
+	private String _sortOrder; // A string to control the SQLite search
+	private Menu _menu; // The menu / action bar for the activity
+	private boolean _isMenuItemsStateHide; // If true, the add and search buttons should be hidden
+	private String _query; // The current search query (if relevant)
 
 	// String giving the default column to sort by.
 	public static final String DEFAULT_SORT_ORDER = "ORDER BY "
@@ -134,6 +134,8 @@ public class MainActivity extends ListActivity implements
 			
 			// Customise the action bar for search
 			actionBarSearchView();
+			
+			System.out.println("Count: " + _cursor.getCount());
 		}
 	}
 	
@@ -192,13 +194,16 @@ public class MainActivity extends ListActivity implements
 			Contact contact = _dm.newContact();
 			long id = contact.getId();
 			Bundle extra = new Bundle();
+			
+			// Provide the contact ID and the type of activity (add) to the next activity
 			extra.putLong("contactID", id);
 			extra.putString("activity", "add");
+			
 			Intent toContact = new Intent(this, EditContactView.class);
 			toContact.putExtras(extra);
 			startActivity(toContact);
 			return true;
-		case android.R.id.home:
+		case android.R.id.home: // I.e. back
 			initialiseActionBar();
 			finish();
 		default:
@@ -240,17 +245,17 @@ public class MainActivity extends ListActivity implements
 	 */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (itemPosition == 0) {
+		if (itemPosition == 0) { // Sort by first name
 			_sortOrder = "ORDER BY " + DatabaseHelper.COL_FIRSTNAME + " ASC";
 			_cursor = _dm.getAllData(_sortOrder);
 			_adapter.swapCursor(_cursor);
 			return true;
-		} else if (itemPosition == 1) {
+		} else if (itemPosition == 1) { // Sort by last name
 			_sortOrder = "ORDER BY " + DatabaseHelper.COL_LASTNAME + " ASC";
 			_cursor = _dm.getAllData(_sortOrder);
 			_adapter.swapCursor(_cursor);
 			return true;
-		} else if (itemPosition == 2) {
+		} else if (itemPosition == 2) { // Sort by number
 			_sortOrder = "ORDER BY CASE WHEN LENGTH(mobilePhone) > 0 THEN "
 					+ DatabaseHelper.COL_MOBILEPHONE
 					+ " WHEN LENGTH(homePhone) > 0 THEN "
