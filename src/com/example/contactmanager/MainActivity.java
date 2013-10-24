@@ -130,23 +130,30 @@ public class MainActivity extends ListActivity implements
 			_query = intent.getStringExtra(SearchManager.QUERY);
 			
 			// Perform the search
-			performSearchQuery();
+			boolean isNotEmptyResults = performSearchQuery();
 			
-			// Customise the action bar for search
-			actionBarSearchView();
-			
-			System.out.println("Count: " + _cursor.getCount());
+			if (isNotEmptyResults) {
+				// Customise the action bar for search
+				actionBarSearchView();
+			}
 		}
 	}
 	
 	/**
 	 * Perform a search, based on an existing query. A class-wide cursor will
 	 * be set.
+	 * 
+	 * @return = true if the query matched some results, false otherwise
 	 */
-	private void performSearchQuery() {
-		_cursor = _dm.getMatch(_query);
-		ContactListAdapter adapter = new ContactListAdapter(this, _cursor);
-		_listView.setAdapter(adapter);
+	private boolean performSearchQuery() {
+		Cursor cursor = _dm.getMatch(_query);
+		if (cursor.getCount() != 0) { // Empty cursors should not result in the search results view.
+			ContactListAdapter adapter = new ContactListAdapter(this, _cursor);
+			_listView.setAdapter(adapter);
+			_cursor = cursor;
+			return true;
+		} 
+		return false;
 	}
 
 	/**
@@ -226,8 +233,16 @@ public class MainActivity extends ListActivity implements
 			_cursor = _dm.getAllData(_sortOrder);
 			_adapter.swapCursor(_cursor);
 		} else { // Search results are shown
-			performSearchQuery();
-			_adapter.swapCursor(_cursor);
+			boolean isNotEmptyResults = performSearchQuery();
+			if (isNotEmptyResults) {
+				_adapter.swapCursor(_cursor);
+			} else {
+				// If the results list is empty due to an update to a contact, 
+				// return to the main list.
+				_cursor = _dm.getAllData(_sortOrder);
+				_adapter.swapCursor(_cursor);
+				finish();
+			}
 		}
 
 		super.onResume();
