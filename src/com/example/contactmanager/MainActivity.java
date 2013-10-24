@@ -41,7 +41,7 @@ public class MainActivity extends ListActivity implements
 	private void initialiseActionBar() {
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowHomeEnabled(false);
-		actionBar.setLogo(R.drawable.back);
+		
 		setTitle(this.getString(R.string.all_contacts));
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -66,8 +66,6 @@ public class MainActivity extends ListActivity implements
 	 */
 	private void actionBarSearchView() {
 		final ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setHomeButtonEnabled(true);
 		actionBar.setTitle(this.getString(R.string.search_title));
 		actionBar.setDisplayShowTitleEnabled(true);
 		ImageView view = (ImageView) findViewById(android.R.id.home);

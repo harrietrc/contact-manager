@@ -1,13 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/action_add"
-        android:title="@string/action_add"
+    <item
+        android:id="@+id/action_add"
         android:icon="@drawable/plus"
-        android:showAsAction="always" />
-    <item android:id="@+id/search"
-          android:title="@string/action_search"
-          android:icon="@drawable/search"
-          android:showAsAction="collapseActionView|ifRoom"
-          android:actionViewClass="android.widget.SearchView" />
+        android:showAsAction="always"
+        android:title="@string/action_add"/>
+    <item
+        android:id="@+id/search"
+        android:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/search"
+        android:showAsAction="collapseActionView|ifRoom"
+        android:title="@string/action_search"/>
 
 </menu>
